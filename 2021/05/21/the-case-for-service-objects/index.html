@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>The Case for Service Objects | Camertron&#39;s Blog</title>
+
+<meta name="description" content="My thoughts on programming, mostly using Ruby and Rails." />
+
+<link rel="stylesheet" href="/_bridgetown/static/css/main.3b31937342ab74462d68.css" />
+<script src="/_bridgetown/static/js/main.3d6f7e53a82bf8c3de0c.js" defer></script>
+
+  </head>
+  <body class="post ">
+    <nav class="navbar is-dark">
+  <div class="navbar-brand">
+    
+    <a class="navbar-item" href="/">
+      Camertron's Blog
+    </a>
+  
+    <div class="navbar-burger burger" data-target="top-navbar" onclick="this.classList.toggle('is-active');document.querySelector('#top-navbar').classList.toggle('is-active')">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <div id="top-navbar" class="navbar-menu">
+    <div class="navbar-start">
+      
+    <a class="navbar-item" href="/">Home</a>
+    <a class="navbar-item" href="/posts">Articles</a>
+    
+  
+    </div>
+
+    <div class="navbar-end">
+      
+    <div class="navbar-item search-item">
+      <bridgetown-search-form>
+  <input slot="input" type="search" class="input" placeholder="Search" />
+  <bridgetown-search-results theme=""></bridgetown-search-results>
+</bridgetown-search-form>
+
+    </div>
+    <a class="navbar-item is-hidden-desktop-only" href="https://twitter.com/camertron" target="_blank">
+      <span class="icon"><i class="fa fa-twitter is-size-6"></i></span>
+      <span class="is-hidden-tablet">Twitter</span>
+    </a>
+        
+    </div>
+  </div>
+</nav>
+
+
+    <main>
+      <article class="h-entry">
+  <header class="hero is-dark is-medium is-bold has-text-centered">
+  <div>
+    <div class="hero-body">
+      <div class="container is-fluid">
+        <h1 class="p-name title is-2 is-spaced has-text-light">
+          The Case for Service Objects
+        </h1>
+        
+      </div>
+    </div>
+  </div>
+</header>
+
+
+  <section class="section">
+    <div class="container">
+
+      <div class="content e-content">
+        <p>This article is a response to Jason Swett’s <a href="https://www.codewithjason.com/rails-service-objects/">“Beware of ‘service objects’ in Rails”</a> blog post. In it, Jason warns of the dangers of letting service objects rob you of the benefits of object-oriented programming. I’ve read Jason’s post several times, and listened to a number of discussions he’s had about service objects on his podcast, <a href="https://www.codewithjason.com/rails-with-jason-podcast/">Rails with Jason</a>.</p>
+
+<p><strong>By the way, both Jason’s blog and podcast are excellent. Go check them out right now 😊</strong></p>
+
+<p>Just last week, Jason was invited onto the Remote Ruby podcast where he and the panelists <a href="https://remoteruby.transistor.fm/129">discussed service objects again</a>. Something about the converstaion struck a cord with me. I’ve listened to Jason talk about his distaste for service objects for a long time. I think he’s right, but also wrong. What follows are my thoughts on the humble, oft misunderstood, service object.</p>
+
+<h3 id="intro">Intro</h3>
+
+<p>Rails has been around for a long time now. It feels weird to write this, but it’ll be Rails’ 20th birthday in just a few short years. For those of us who’ve used the framework for a long time, 20 years feels like a pretty incredible milestone.</p>
+
+<p>I started using Rails ~11 years ago, pretty much straight out of college. I worked on Twitter’s International Engineering Team on the Twitter Translation Center, a Rails app that managed our large database of localized content and facilitated contributions from thousands of volunteer translators around the world. It was my first time using Ruby, and I absolutely fell in love with it. Ruby and Rails made CakePHP, the framework I was using at the time for my side projects, feel pretty clunky and outmoded. Ruby and Rails are still my favorite language and framework today, and I know many other devs who feel the same way.</p>
+
+<p>Why has Rails had such staying power? I would argue there are two major reasons:</p>
+
+<ol>
+  <li>The Ruby and Rails communities are nonpareil in the software world, and</li>
+  <li>Rails keeps evolving.</li>
+</ol>
+
+<p>Hotwire is just the latest example of the evolution Rails devs have enjoyed for the last two decades. I invite you to look back on the asset pipeline, action cable, and turbolinks as a few examples from the past that also changed the game.</p>
+
+<h3 id="weve-evolved-too">We’ve Evolved Too</h3>
+
+<p>While the framework has changed, so have we as Rails developers. A few years ago much noise was made over the “fat model, skinny controller” concept (in case you’re not familiar, the idea is to keep your controller code to a minimum and put all your domain logic into the model layer).</p>
+
+<p>In fact, I would posit that a number of the changes in thinking we’ve gone through as a community have been related to code organization. Where do you put that odd piece of code that doesn’t seem to fit in any of Rails’ predefined slots?</p>
+
+<p>One of the answers is to give Rails <em>new</em> slots:</p>
+
+<ol>
+  <li>The <a href="https://github.com/drapergem/draper">draper gem</a> adds the app/decorators directory for “view models,” i.e. view presenters.</li>
+  <li>The <a href="https://www.codementor.io/@victor_hazbun/complex-form-objects-in-rails-qval6b8kt">form objects</a> design pattern adds the app/forms directory for handling complex forms.</li>
+  <li>The <a href="https://github.com/varvet/pundit">pundit gem</a> adds the app/policies directory for specifying authorization rules.</li>
+  <li>The <a href="https://github.com/github/view_component">view_component gem</a> adds the app/components directory for components that encapsulate view code.</li>
+  <li>Etc, etc.</li>
+</ol>
+
+<p>Of course Rails itself also adds new slots from time to time:</p>
+
+<ol>
+  <li>Rails 3.0 introduced <a href="https://api.rubyonrails.org/v6.1.3.1/classes/ActiveSupport/Concern.html">concerns</a> and the app/models/concerns folder for augmenting models.</li>
+  <li>Rails 4.2 introduced <a href="https://guides.rubyonrails.org/active_job_basics.html">active job</a> and the app/jobs folder for background jobs.</li>
+  <li>Also see app/assets, app/channels, etc.</li>
+</ol>
+
+<p>While all these also added awesome new features to Rails, let’s not overlook how significant it is that they introduced a bunch of additional slots to help us organize our code better. In fact, you’d probably agree that a <em>lot</em> of Rails’ power comes from its predefined folder structure (just ask your favorite React dev 😏).</p>
+
+<h3 id="service-objects">Service Objects</h3>
+
+<p>Service objects are yet another slot for organizing our Ruby code, albeit a fairly misunderstood one. For instance, although the community has produced a number of gems for creating service objects, we haven’t really coalesced around any one of them. That’s probably because service objects in their purest form are just Ruby classes with a fancy name.</p>
+
+<p>For example, here’s a service object that creates a user:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CreateUser</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">call</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="no">User</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now, I hear you saying, “Wait wait, that’s not what service objects are!” and you’re right. The term “service object” means different things to different people. In my opinion however, here’s what a “service object” is:</p>
+
+<ol>
+  <li>A plain ‘ol Ruby object with a <code class="highlighter-rouge">call</code> method.</li>
+</ol>
+
+<p>That’s literally it.</p>
+
+<p>Ok there is one other thing. You may have noticed that the name of the example service object above, <code class="highlighter-rouge">CreateUser</code>, sounds more like the name of a method than a class. That’s intentional.</p>
+
+<p>I like to think of service objects as representing <em>actions</em>.</p>
+
+<h3 id="skinny-controllers">Skinny Controllers</h3>
+
+<p>“Hey,” I hear you saying. “Actions… like in controllers?”</p>
+
+<p>Yes! In the applications I’ve worked on, <em><strong>service objects were extracted exclusively from controller actions</strong></em>.</p>
+
+<p>This is the major point on which Jason and I differ. Whereas he writes about service objects as being part of the <em>models</em> directory, I think of them as being part of the <em>controllers</em> directory. In my mind, “services” are just miniature web applications. Service <em>objects</em> therefore should aid in responding to web requests.</p>
+
+<p>Consider again our humble <code class="highlighter-rouge">CreateUser</code> service object. We can easily imagine how the <code class="highlighter-rouge">User.create</code> call inside it could have once been part of a controller action:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="n">user_params</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="vi">@user</span><span class="p">.</span><span class="nf">valid?</span>
+      <span class="no">UserMailer</span><span class="p">.</span><span class="nf">with</span><span class="p">(</span><span class="ss">user: </span><span class="vi">@user</span><span class="p">).</span><span class="nf">welcome_email</span><span class="p">.</span><span class="nf">deliver_later</span>
+      <span class="n">redirect_to</span> <span class="n">dashboard_path</span><span class="p">,</span> <span class="ss">notice: </span><span class="s1">'Welcome aboard!'</span>
+    <span class="k">else</span>
+      <span class="n">render</span> <span class="ss">:new</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">user_params</span>
+    <span class="n">params</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="ss">:user</span><span class="p">).</span><span class="nf">permit</span><span class="p">(</span><span class="ss">:first_name</span><span class="p">,</span> <span class="ss">:last_name</span><span class="p">,</span> <span class="ss">:email_address</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Notice that the <code class="highlighter-rouge">#create</code> action creates the user, but also sends a welcome email.</p>
+
+<p>As your app grows, so do your controller actions. Maybe you decide you want to register the user with your 3rd-party email/marketing system when they sign up. A few months later you decide to A/B test sending a free trial email at signup instead of the traditional welcome email:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="vi">@user</span> <span class="o">=</span> <span class="no">User</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="n">user_params</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="vi">@user</span><span class="p">.</span><span class="nf">valid?</span>
+      <span class="no">BrazeClient</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">register_email</span><span class="p">(</span><span class="vi">@user</span><span class="p">.</span><span class="nf">email_address</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="no">Flipper</span><span class="p">.</span><span class="nf">enabled?</span><span class="p">(</span><span class="ss">:free_trial_email_at_signup</span><span class="p">,</span> <span class="vi">@user</span><span class="p">)</span>
+        <span class="no">UserMailer</span><span class="p">.</span><span class="nf">with</span><span class="p">(</span><span class="ss">user: </span><span class="vi">@user</span><span class="p">).</span><span class="nf">free_trial_email</span><span class="p">.</span><span class="nf">deliver_later</span>
+      <span class="k">else</span>
+        <span class="no">UserMailer</span><span class="p">.</span><span class="nf">with</span><span class="p">(</span><span class="ss">user: </span><span class="vi">@user</span><span class="p">).</span><span class="nf">welcome_email</span><span class="p">.</span><span class="nf">deliver_later</span>
+      <span class="k">end</span>
+
+      <span class="n">redirect_to</span> <span class="n">dashboard_path</span><span class="p">,</span> <span class="ss">notice: </span><span class="s1">'Welcome aboard!'</span>
+    <span class="k">else</span>
+      <span class="n">render</span> <span class="ss">:new</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">user_params</span>
+    <span class="n">params</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="ss">:user</span><span class="p">).</span><span class="nf">permit</span><span class="p">(</span><span class="ss">:first_name</span><span class="p">,</span> <span class="ss">:last_name</span><span class="p">,</span> <span class="ss">:email_address</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Whoa, that <code class="highlighter-rouge">#create</code> method is getting pretty long. More concerning though is how much logic it encapsulates - logic that can’t be reused outside the controller. In addition, I’ve only shown a single action in this example. A complete RESTful controller will have seven.</p>
+
+<p>Let’s pull all that creation code into the service object instead:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CreateUser</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">call</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="p">).</span><span class="nf">create</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="vi">@params</span> <span class="o">=</span> <span class="n">params</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="n">user</span><span class="p">.</span><span class="nf">tap</span> <span class="k">do</span> <span class="o">|</span><span class="n">u</span><span class="o">|</span>
+      <span class="k">if</span> <span class="n">u</span><span class="p">.</span><span class="nf">valid?</span>
+        <span class="n">send_email_address_to_braze</span>
+        <span class="n">send_signup_email</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">send_email_address_to_braze</span>
+    <span class="no">BrazeClient</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">register_email</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="nf">email_address</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">send_signup_email</span>
+    <span class="k">if</span> <span class="n">send_free_trial_email?</span>
+      <span class="no">UserMailer</span><span class="p">.</span><span class="nf">with</span><span class="p">(</span><span class="ss">user: </span><span class="n">user</span><span class="p">).</span><span class="nf">free_trial_email</span><span class="p">.</span><span class="nf">deliver_later</span>
+    <span class="k">else</span>
+      <span class="no">UserMailer</span><span class="p">.</span><span class="nf">with</span><span class="p">(</span><span class="ss">user: </span><span class="n">user</span><span class="p">).</span><span class="nf">welcome_email</span><span class="p">.</span><span class="nf">deliver_later</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">send_free_trial_email?</span>
+    <span class="no">Flipper</span><span class="p">.</span><span class="nf">enabled?</span><span class="p">(</span><span class="ss">:free_trial_email_at_signup</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">user</span>
+    <span class="vi">@user</span> <span class="o">||=</span> <span class="no">User</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="vi">@params</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>I really like this. Not only is the public API minimal, I can hang a bunch of helper methods onto the class that I might have been hesitant to add to the controller.</p>
+
+<p>And by extracting the user creation logic into the service object, the controller now does a whole lot less:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="vi">@user</span> <span class="o">=</span> <span class="no">CreateUser</span><span class="o">.</span><span class="p">(</span><span class="n">user_params</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="vi">@user</span><span class="p">.</span><span class="nf">valid?</span>
+      <span class="n">redirect_to</span> <span class="n">dashboard_path</span><span class="p">,</span> <span class="ss">notice: </span><span class="s1">'Welcome aboard!'</span>
+    <span class="k">else</span>
+      <span class="n">render</span> <span class="ss">:new</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">user_params</span>
+    <span class="n">params</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="ss">:user</span><span class="p">).</span><span class="nf">permit</span><span class="p">(</span><span class="ss">:first_name</span><span class="p">,</span> <span class="ss">:last_name</span><span class="p">,</span> <span class="ss">:email_address</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>But skinny controllers aren’t the only benefit.</p>
+
+<h3 id="bulk-user-importer">Bulk User Importer</h3>
+
+<p>In my mind, the most significant benefit of the service object approach is <em>code reuse</em>.</p>
+
+<p>Let’s say our company starts offering our services b2b and we need to create a bunch of user accounts for all the people who work at another company. We decide to add a bulk user importer to our system that’s capable of reading a CSV file and creating a bunch of user accounts all at once. This exact scenario came up at one of my previous jobs.</p>
+
+<p>Fortunately, our user creation logic is conveniently encapsulated into a service object, so reusing it is a piece of cake:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'csv'</span>
+
+<span class="k">class</span> <span class="nc">UserCsvFile</span>
+  <span class="nb">attr_reader</span> <span class="ss">:path</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="vi">@path</span> <span class="o">=</span> <span class="n">path</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">import</span>
+    <span class="n">table</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">row</span><span class="o">|</span>
+      <span class="no">CreateUser</span><span class="o">.</span><span class="p">(</span><span class="n">row</span><span class="p">.</span><span class="nf">to_h</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">table</span>
+    <span class="vi">@table</span> <span class="o">||=</span> <span class="no">CSV</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="no">File</span><span class="p">.</span><span class="nf">read</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="ss">headers: </span><span class="kp">true</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">UserCsvFile</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'/path/to/users.csv'</span><span class="p">).</span><span class="nf">import</span>
+</code></pre></div></div>
+
+<p>You could copy and paste the code from the controller into the <code class="highlighter-rouge">UserCsvFile</code> class, <a href="https://speakerdeck.com/tenderlove/but-at-what-cost">but at what cost?</a> Every time the controller changes, so does <code class="highlighter-rouge">UserCsvFile</code>. At some point, someone’s gonna forget to update both codepaths.</p>
+
+<h3 id="thats-all-there-is-to-it">That’s… all there is to it?</h3>
+
+<p>I’m sure some of you reading this are now thoroughly fed up. Has it really taken this guy over a thousand words just to tell you about Ruby classes?</p>
+
+<p>Well, that’s the thing about service objects. They really can be that simple. In fact, service objects aren’t even a design pattern. They’re just a code organization tool for extracting chunks of procedural code from controller actions, i.e. “do this, then do this, then do this last thing.” The “service object” moniker is just a name. We could easily call these chunks of code “actions” or maybe “commands” as Jason mentions.</p>
+
+<h3 id="loss-of-object-orientation">Loss of Object-Orientation</h3>
+
+<p>In his blog post, Jason makes the following assertion:</p>
+
+<blockquote>
+  <p><strong>Service objects throw out the fundamental advantages of object-oriented programming.</strong></p>
+
+  <p>“Objects” like this aren’t abstractions of concepts in the domain model. They’re chunks of procedural code masquerading as object-oriented code.</p>
+</blockquote>
+
+<p>He’s absolutely right that service objects aren’t abstractions of concepts in the domain model. They exist to encapsulate procedural code. After all, controller actions tend to be procedural, so it follows that service objects are as well.</p>
+
+<p>This encapsulation idea is one of the tenets of object-oriented programming; the data needed to perform the action is held by the object, and the object’s method’s (<code class="highlighter-rouge">call</code> in our case) uses that data to perform the action.</p>
+
+<h3 id="advanced-techniques">Advanced Techniques</h3>
+
+<p>Because service objects are just classes with basically no rules, you have the full power of the Ruby language at your disposal. Pretty much anything goes.</p>
+
+<p>For example, consider the various ways our <code class="highlighter-rouge">CreateUser</code> operation can fail. Might be kinda nice to support some failure modes:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">UsersController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="no">CreateUser</span><span class="o">.</span><span class="p">(</span><span class="n">user_params</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">result</span><span class="o">|</span>
+      <span class="c1"># creation succeeded</span>
+      <span class="n">result</span><span class="p">.</span><span class="nf">success</span> <span class="k">do</span> <span class="o">|</span><span class="n">_user</span><span class="o">|</span>
+        <span class="n">redirect_to</span> <span class="n">dashboard_path</span><span class="p">,</span> <span class="ss">notice: </span><span class="s1">'Welcome aboard!'</span>
+      <span class="k">end</span>
+
+      <span class="c1"># user is invalid</span>
+      <span class="n">result</span><span class="p">.</span><span class="nf">failure</span> <span class="k">do</span> <span class="o">|</span><span class="n">user</span><span class="o">|</span>
+        <span class="vi">@user</span> <span class="o">=</span> <span class="n">user</span>
+        <span class="n">render</span> <span class="ss">:new</span>
+      <span class="k">end</span>
+
+      <span class="c1"># CreateUser.() raised an error</span>
+      <span class="n">result</span><span class="p">.</span><span class="nf">error</span> <span class="k">do</span> <span class="o">|</span><span class="n">e</span><span class="o">|</span>
+        <span class="no">Rollbar</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">flash</span><span class="p">.</span><span class="nf">now</span><span class="p">[</span><span class="ss">:error</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'Something went wrong, please try again'</span>
+        <span class="n">render</span> <span class="ss">:new</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">user_params</span>
+    <span class="n">params</span><span class="p">.</span><span class="nf">require</span><span class="p">(</span><span class="ss">:user</span><span class="p">).</span><span class="nf">permit</span><span class="p">(</span><span class="ss">:first_name</span><span class="p">,</span> <span class="ss">:last_name</span><span class="p">,</span> <span class="ss">:email_address</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Dang that’s nice 🔥🔥🔥</p>
+
+<p>Here’s what the service object might look like:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CreateUser</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">call</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">new</span><span class="p">(</span><span class="n">params</span><span class="p">).</span><span class="nf">create</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="vi">@params</span> <span class="o">=</span> <span class="n">params</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">create</span>
+    <span class="k">if</span> <span class="n">user</span><span class="p">.</span><span class="nf">valid?</span>
+      <span class="n">send_email_address_to_braze</span>
+      <span class="n">send_signup_email</span>
+      <span class="no">Success</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">else</span>
+      <span class="no">Failure</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">rescue</span> <span class="no">Exception</span> <span class="o">=&gt;</span> <span class="n">e</span>
+    <span class="no">Error</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">send_email_address_to_braze</span>
+    <span class="no">BrazeClient</span><span class="p">.</span><span class="nf">new</span><span class="p">.</span><span class="nf">register_email</span><span class="p">(</span><span class="n">user</span><span class="p">.</span><span class="nf">email_address</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">send_signup_email</span>
+    <span class="k">if</span> <span class="n">send_free_trial_email?</span>
+      <span class="no">UserMailer</span><span class="p">.</span><span class="nf">with</span><span class="p">(</span><span class="ss">user: </span><span class="n">user</span><span class="p">).</span><span class="nf">free_trial_email</span><span class="p">.</span><span class="nf">deliver_later</span>
+    <span class="k">else</span>
+      <span class="no">UserMailer</span><span class="p">.</span><span class="nf">with</span><span class="p">(</span><span class="ss">user: </span><span class="n">user</span><span class="p">).</span><span class="nf">welcome_email</span><span class="p">.</span><span class="nf">deliver_later</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">send_free_trial_email?</span>
+    <span class="no">Flipper</span><span class="p">.</span><span class="nf">enabled?</span><span class="p">(</span><span class="ss">:free_trial_email_at_signup</span><span class="p">,</span> <span class="n">user</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">user</span>
+    <span class="vi">@user</span> <span class="o">||=</span> <span class="no">User</span><span class="p">.</span><span class="nf">create</span><span class="p">(</span><span class="vi">@params</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>And finally here are the result classes:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Result</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+    <span class="vi">@args</span> <span class="o">=</span> <span class="n">args</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">success</span><span class="p">(</span><span class="o">&amp;</span><span class="n">block</span><span class="p">);</span> <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">failure</span><span class="p">(</span><span class="o">&amp;</span><span class="n">block</span><span class="p">);</span> <span class="k">end</span>
+  <span class="k">def</span> <span class="nf">error</span><span class="p">(</span><span class="o">&amp;</span><span class="n">block</span><span class="p">);</span> <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Success</span> <span class="o">&lt;</span> <span class="no">Result</span>
+  <span class="k">def</span> <span class="nf">success</span><span class="p">(</span><span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="o">*</span><span class="vi">@args</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Failure</span> <span class="o">&lt;</span> <span class="no">Result</span>
+  <span class="k">def</span> <span class="nf">failure</span><span class="p">(</span><span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="o">*</span><span class="vi">@args</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Error</span> <span class="o">&lt;</span> <span class="no">Result</span>
+  <span class="k">def</span> <span class="nf">error</span><span class="p">(</span><span class="o">&amp;</span><span class="n">block</span><span class="p">)</span>
+    <span class="k">yield</span> <span class="o">*</span><span class="vi">@args</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>I hope this article has explained why service objects deserve a place in your Rails app. Just remember to keep ‘em out of your model code.</p>
+
+<p>Disagree? <a href="https://twitter.com/camertron">Hit me up</a> on Twitter.</p>
+
+      </div>
+    </div>
+  </section>
+</article>
+
+    </main>
+
+    <footer class="footer">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-5">
+        <div class="logo">
+          Camertron's Blog
+        </div>
+
+        <h4>
+          My thoughts on programming, mostly with Ruby
+        </h4>
+
+        <div class="mt-3">
+          Follow on Twitter: <strong><a href="https://twitter.com/camertron">@camertron</strong></a>
+        </div>
+
+      </div>
+      <div class="column is-4">
+      </div>
+      <div class="column is-3">
+        <h4>
+          <strong>Share</strong> on Social Media
+        </h4>
+
+        <div class="mt-5">
+          <a href="https://twitter.com/intent/tweet?url=&via=camertron&text=Check%20out%20this%20awesome%20new%20site%20built%20with%20Bridgetown%20and%20Ruby%21&hashtags=SpinUpBridgetown%2CJamstack" class="button is-info">
+            <span class="icon"> <i class="fa fa-twitter is-size-5"></i> </span>
+            <span class="has-text-weight-bold">Tweet</span>
+          </a>
+        </div>
+
+        <div class="mt-6">
+          <a href="/feed.xml" class="button is-danger is-small">
+            <span class="icon"> <i class="fa fa-rss"></i> </span>
+            <span class="has-text-weight-bold">News Feed</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  </body>
+</html>
