@@ -3,7 +3,7 @@
 set -ex
 
 # build site into output/
-BRIDGETOWN_ENV=production yarn build
+BRIDGETOWN_ENV=production yarn deploy
 
 # switch to deploy branch
 git checkout deploy
