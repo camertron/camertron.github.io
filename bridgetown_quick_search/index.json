@@ -1,5 +1,17 @@
 [
         {
+          "id": "2021-05-21-attr-reader-is-awesome",
+          "title": "Why You Should Use attr_reader",
+          "collection": {
+            "label": "posts",
+            "name": "Posts"
+          },
+          "categories": "",
+          "tags": "",
+          "url": "/2021/05/21/attr-reader-is-awesome/",
+          "content": "Foo bar baz"
+        },
+        {
           "id": "2021-05-21-the-case-for-service-objects",
           "title": "The Case for Service Objects",
           "collection": {
