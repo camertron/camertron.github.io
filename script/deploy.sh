@@ -11,6 +11,7 @@ git checkout deploy
 # delete old release; recursively copy all files from output/
 rm -rf ./docs
 cp -R ./output/ ./docs/
+git checkout docs/CNAME docs/.nojekyll
 
 # commit and push to deploy branch
 git add -A
