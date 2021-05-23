@@ -2,7 +2,7 @@
 
 set -e
 
-yarn build
+BRIDGETOWN_ENV=production yarn build
 git checkout deploy
 cp -R output/ ./
 git add -A
