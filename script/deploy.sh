@@ -7,5 +7,5 @@ git checkout deploy
 cp -R output/ ./
 git add -A
 git commit -m "Update build"
-git push origin deploy
+git push origin HEAD
 git checkout main
