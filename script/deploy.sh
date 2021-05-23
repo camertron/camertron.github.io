@@ -9,8 +9,8 @@ BRIDGETOWN_ENV=production yarn build
 git checkout deploy
 
 # delete old release; recursively copy all files from output/
-rm -rf ./site
-cp -R ./output/ ./site/
+rm -rf ./docs
+cp -R ./output/ ./docs/
 
 # commit and push to deploy branch
 git add -A
