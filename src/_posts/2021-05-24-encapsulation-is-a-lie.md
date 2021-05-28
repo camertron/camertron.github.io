@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Encapsulation is a Lie"
-date: 2021-05-24 14:09:30 -0700
-published: false
+date: 2021-05-28 12:03:30 -0700
+published: true
 tags:
   - ruby
 ---
