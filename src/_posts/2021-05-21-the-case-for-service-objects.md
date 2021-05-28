@@ -15,6 +15,8 @@ This article is a response to Jason Swett's ["Beware of 'service objects' in Rai
 
 Just last week, Jason was invited onto the Remote Ruby podcast where he and the panelists [discussed service objects again](https://remoteruby.transistor.fm/129). Something about the converstaion struck a cord with me. I've listened to Jason talk about his distaste for service objects for a long time. I think he's right, but also wrong. What follows are my thoughts on the humble, oft misunderstood, service object.
 
+**Published on May 21st, 2021**
+
 ### Intro
 
 Rails has been around for a long time now. It feels weird to write this, but it'll be Rails' 20th birthday in just a few short years. For those of us who've used the framework for a long time, 20 years feels like a pretty incredible milestone.
