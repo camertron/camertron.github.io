@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Encapsulation is a Lie | Camertron&#39;s Blog</title>
+
+<meta name="description" content="My thoughts on programming, mostly using Ruby and Rails." />
+
+<link rel="stylesheet" href="/_bridgetown/static/css/main.3b31937342ab74462d68.css" />
+<script src="/_bridgetown/static/js/main.3d6f7e53a82bf8c3de0c.js" defer></script>
+
+  </head>
+  <body class="post ">
+    <nav class="navbar is-dark">
+  <div class="navbar-brand">
+    
+    <a class="navbar-item" href="/">
+      Camertron's Blog
+    </a>
+  
+    <div class="navbar-burger burger" data-target="top-navbar" onclick="this.classList.toggle('is-active');document.querySelector('#top-navbar').classList.toggle('is-active')">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <div id="top-navbar" class="navbar-menu">
+    <div class="navbar-start">
+      
+    <a class="navbar-item" href="/">Home</a>
+    <a class="navbar-item" href="/posts">Articles</a>
+    
+  
+    </div>
+
+    <div class="navbar-end">
+      
+    <div class="navbar-item search-item">
+      <bridgetown-search-form>
+  <input slot="input" type="search" class="input" placeholder="Search" />
+  <bridgetown-search-results theme=""></bridgetown-search-results>
+</bridgetown-search-form>
+
+    </div>
+    <a class="navbar-item is-hidden-desktop-only" href="https://twitter.com/camertron" target="_blank">
+      <span class="icon"><i class="fa fa-twitter is-size-6"></i></span>
+      <span class="is-hidden-tablet">Twitter</span>
+    </a>
+        
+    </div>
+  </div>
+</nav>
+
+
+    <main>
+      <article class="h-entry">
+  <header class="hero is-dark is-medium is-bold has-text-centered">
+  <div>
+    <div class="hero-body">
+      <div class="container is-fluid">
+        <h1 class="p-name title is-2 is-spaced has-text-light">
+          Encapsulation is a Lie
+        </h1>
+        
+      </div>
+    </div>
+  </div>
+</header>
+
+
+  <section class="section">
+    <div class="container">
+
+      <div class="content e-content">
+        <p>In this post I respond to another of Jason Swett’s recent articles, <a href="https://www.codewithjason.com/dont-wrap-instance-variables-attr_reader-unless-necessary/">Don’t wrap instance variables in attr_reader unless necessary</a>. Jason, if you’re reading this please know this blog isn’t only about critiquing your writing, which I find insightful and thought-provoking. You’ve really gotten me thinking lately, and I’ve been meaning to start a blog for a long time anyway. Seemed like a good opportunity to finally get one going.</p>
+
+<h3 id="what-is-attr_reader">What is <code class="highlighter-rouge">attr_reader</code>?</h3>
+
+<p>It’s common to see Ruby classes expose instance variables using a special class method called <code class="highlighter-rouge">attr_reader</code>, eg:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Email</span>
+  <span class="nb">attr_reader</span> <span class="ss">:subject</span><span class="p">,</span> <span class="ss">:body</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+    <span class="vi">@subject</span> <span class="o">=</span> <span class="n">subject</span>
+    <span class="vi">@body</span> <span class="o">=</span> <span class="n">body</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">email</span> <span class="o">=</span> <span class="no">Email</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Check this out'</span><span class="p">,</span> <span class="s1">'Ruby rocks'</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">email</span><span class="p">.</span><span class="nf">subject</span>  <span class="c1"># =&gt; prints "Check this out"</span>
+</code></pre></div></div>
+
+<p>As you can see, <code class="highlighter-rouge">attr_reader :name</code> defines the <code class="highlighter-rouge">#name</code> method on our <code class="highlighter-rouge">Email</code> class. The <code class="highlighter-rouge">#name</code> method simply returns the value of the <code class="highlighter-rouge">@name</code> instance variable.</p>
+
+<p>Ruby also features two other class methods, <code class="highlighter-rouge">attr_writer</code> and <code class="highlighter-rouge">attr_accessor</code>. The former defines a method for assigning a value to an instance variable (eg. <code class="highlighter-rouge">#name=</code>) while the latter defines both the getter and the setter (i.e. both <code class="highlighter-rouge">#name</code> <em>and</em> <code class="highlighter-rouge">#name=</code>).</p>
+
+<p>Why would you ever do this? The basic premise is that instance variables are <em>private</em>, meaning nobody outside the class can get or set them. By wrapping ivars with <code class="highlighter-rouge">attr_reader</code> and friends, they are now available to the outside world.</p>
+
+<h3 id="why-methods-are-almost-always-better">Why Methods are Almost Always Better</h3>
+
+<p>In my opinion, by far the biggest benefit of <code class="highlighter-rouge">attr_reader</code> is that it exposes instance variables as methods. Why are methods better? In a word, <em>inheritance</em>.</p>
+
+<p>There’s no way to override instance variables in Ruby. Consider an ivar-only version of our <code class="highlighter-rouge">Email</code> class from earlier (notice the addition of the <code class="highlighter-rouge">#deliver_to</code> method):</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'mail'</span>
+
+<span class="k">class</span> <span class="nc">Email</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+    <span class="vi">@subject</span> <span class="o">=</span> <span class="n">subject</span>
+    <span class="vi">@body</span> <span class="o">=</span> <span class="n">body</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">deliver_to</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+    <span class="n">mail</span> <span class="o">=</span> <span class="no">Mail</span><span class="p">.</span><span class="nf">new</span>
+    <span class="n">mail</span><span class="p">[</span><span class="ss">:from</span><span class="p">]</span> <span class="o">=</span> <span class="s1">'no-reply@camerondutro.com'</span>
+    <span class="n">mail</span><span class="p">[</span><span class="ss">:to</span><span class="p">]</span> <span class="o">=</span> <span class="n">address</span>
+    <span class="n">mail</span><span class="p">[</span><span class="ss">:subject</span><span class="p">]</span> <span class="o">=</span> <span class="vi">@subject</span>
+    <span class="n">mail</span><span class="p">[</span><span class="ss">:body</span><span class="p">]</span> <span class="o">=</span> <span class="vi">@body</span>
+    <span class="n">mail</span><span class="p">.</span><span class="nf">deliver!</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Let’s say I want to add a signature at the end of the email body. To do so, I’ll create a new <code class="highlighter-rouge">EmailWithSignature</code> class that inherits from <code class="highlighter-rouge">Email</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">EmailWithSignature</span> <span class="o">&lt;</span> <span class="no">Email</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Somewhere in my new class, I need to append the signature to the body. I only really have two options:</p>
+
+<ol>
+  <li>Override <code class="highlighter-rouge">#initialize</code> and append the signature to <code class="highlighter-rouge">@body</code>.</li>
+  <li>Override <code class="highlighter-rouge">#deliver_to</code> so it appends the signature on send.</li>
+</ol>
+
+<p>Neither of these options feel particularly “clean.” Both <code class="highlighter-rouge">#initialize</code> and <code class="highlighter-rouge">#deliver_to</code> accept arguments, and those arguments can change over time. If I override one of them, I have to make sure my derived <code class="highlighter-rouge">EmailWithSignature</code> class changes whenever <code class="highlighter-rouge">Email</code> does.</p>
+
+<p>If I choose to override <code class="highlighter-rouge">#deliver_to</code>, I have to copy/paste the logic into <code class="highlighter-rouge">EmailWithSignature</code> in order to change the content of the body, or potentially reassign <code class="highlighter-rouge">@body</code> before calling <code class="highlighter-rouge">super</code>. Yuck.</p>
+
+<p>Instead, let’s wrap our instance variables in <code class="highlighter-rouge">attr_reader</code>s (see above). Now the derived class can simply override the <code class="highlighter-rouge">body</code> method, which will always accept zero arguments:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">EmailWithSignature</span> <span class="o">&lt;</span> <span class="no">Email</span>
+  <span class="k">def</span> <span class="nf">body</span>
+    <span class="k">super</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n\n</span><span class="s2">-Cameron Dutro</span><span class="se">\n</span><span class="s2">International Man of Mystery"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Much easier, much cleaner.</p>
+
+<p>The limitations of the ivar approach have bitten me numerous times in my professional career. In most cases, requirements had changed and I found myself needing to extend an existing class. Using <code class="highlighter-rouge">attr_reader</code> would have given me the “hooks” I needed to non-intrusively modify the class’s behavior.</p>
+
+<p>Remember that derived classes can call your private methods. If you’re worried about someone else messing with your encapsulated data, just make your <code class="highlighter-rouge">attr_reader</code>s private:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Email</span>
+  <span class="nb">attr_reader</span> <span class="ss">:subject</span><span class="p">,</span> <span class="ss">:body</span>
+  <span class="kp">private</span> <span class="ss">:subject</span><span class="p">,</span> <span class="ss">:body</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">subject</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+    <span class="vi">@subject</span> <span class="o">=</span> <span class="n">subject</span>
+    <span class="vi">@body</span> <span class="o">=</span> <span class="n">body</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">email</span> <span class="o">=</span> <span class="no">Email</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="s1">'Check this out'</span><span class="p">,</span> <span class="s1">'Ruby rocks'</span><span class="p">)</span>
+<span class="nb">puts</span> <span class="n">email</span><span class="p">.</span><span class="nf">subject</span>  <span class="c1"># =&gt; raises a NoMethodError</span>
+</code></pre></div></div>
+
+<p>However, I prefer to make all of mine public. That’s because I believe encapsulation <em>doesn’t exist</em>.</p>
+
+<h3 id="the-problem-with-encapsulation">The Problem with Encapsulation</h3>
+
+<p>If you’ve gone through any sort of formal computer science training, chances are you’ve been taught the four main pillars of object-oriented programming: <strong>inheritance</strong>, <strong>abstraction</strong>, <strong>polymorphism</strong>, and <strong>encapsulation</strong>.</p>
+
+<p>As you probably already know, encapsulation prevents direct access to an object’s state. In Ruby, that means preventing direct access to an object’s instance variables. The idea is that the object and the object alone should be able to mutate its state, perhaps to maintain some invariants, etc.</p>
+
+<p>However in the vast majority of object-oriented systems, much of what we think of as the internal, encapsulated state of an object is actually <em>shared</em> state. Let’s take a look at a class (granted, a very naïve one) that represents an email address:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">EmailAddress</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">address</span><span class="p">)</span>
+    <span class="k">unless</span> <span class="n">address</span><span class="p">.</span><span class="nf">include?</span><span class="p">(</span><span class="s1">'@'</span><span class="p">)</span>
+      <span class="k">raise</span> <span class="no">InvalidAddressError</span><span class="p">,</span> <span class="s2">"the address '</span><span class="si">#{</span><span class="n">address</span><span class="si">}</span><span class="s2">' is invalid"</span>
+    <span class="k">end</span>
+
+    <span class="vi">@address</span> <span class="o">=</span> <span class="n">address</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">user</span>
+    <span class="vi">@address</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="s1">'@'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">host</span>
+    <span class="vi">@address</span><span class="p">.</span><span class="nf">split</span><span class="p">(</span><span class="s1">'@'</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Our class nicely encapsulates <code class="highlighter-rouge">@address</code>. Nobody else should be able to mess with it right?</p>
+
+<p>Wrong!</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">address_str</span> <span class="o">=</span> <span class="s1">'foo@bar.com'</span>
+<span class="n">address</span> <span class="o">=</span> <span class="no">EmailAddress</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">address_str</span><span class="p">)</span>
+<span class="n">address</span><span class="p">.</span><span class="nf">host</span>  <span class="c1"># =&gt; "bar.com"</span>
+<span class="n">address_str</span><span class="p">.</span><span class="nf">replace</span><span class="p">(</span><span class="s1">'woops!'</span><span class="p">)</span>
+<span class="n">address</span><span class="p">.</span><span class="nf">host</span>  <span class="c1"># =&gt; nil</span>
+</code></pre></div></div>
+
+<p>Woops! Since everything in Ruby is passed by reference, it’s entirely possible for the data given to an object to change without the object’s knowledge. In other words, <em>encapsulation can be easily bypassed</em>.</p>
+
+<p>It doesn’t matter if we use ivars or make the <code class="highlighter-rouge">attr_reader</code> private. There’s always the chance someone else is holding on to a reference to our “private” data and can mutate it at will.</p>
+
+<p>To me, that’s a pretty big deal. It means encapsulation is kind of a lie. If you assign ivars in your class’s constructor from passed-in data, you might as well expose them with <code class="highlighter-rouge">attr_reader</code>s. They’re basically public anyway.</p>
+
+<h3 id="encapsulating-better">Encapsulating Better</h3>
+
+<p>Hold on. If encapsulation doesn’t exist, then doesn’t that call all of object-oriented programming into question?</p>
+
+<p>Maybe, but I’m not the right person to say one way or the other. I happen to really enjoy object-oriented programming. It fits the way my brain works.</p>
+
+<p>But just like a number of aspects of software development, programming well requires <em>discipline</em>. I posit that large object-oriented systems stay afloat because programmers, mostly unconsciously, develop an understanding of the nuances of encapsulation and evolve habits to avoid the major pitfalls. That’s certainly been the case for me. It was only in thinking deeply about this article that I began to ask myself why, for example, reassigning instance variables feels wrong to me.</p>
+
+<p>To that end, I like to follow these rules:</p>
+
+<ol>
+  <li>Only set instance variables once. After they are set, treat them like constants.</li>
+  <li>Copy objects before mutating them.</li>
+</ol>
+
+<p>The goal here is to prevent our objects from changing except at well-known points in time.</p>
+
+<h4 id="only-set-instance-variables-once">Only Set Instance Variables Once</h4>
+
+<p>In most cases, I think reassigning instance variables is a code smell. If your object needs to change what data it references, <em>it should have asked for different data at initialization</em>.</p>
+
+<p><strong>NOTE</strong>: Methods that use instance variables to memoize the result of a lazily evaluated expression are ok because, although the object didn’t ask for the data at initialization, it still only sets the instance variable once.</p>
+
+<p>The less your object’s state changes after initialization, the less uncertainty you introduce into the system.</p>
+
+<h4 id="copy-objects-before-mutating-them">Copy Objects Before Mutating Them</h4>
+
+<p>Consider this classic example of pass-by-reference mayhem:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">compliment</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+  <span class="nb">puts</span> <span class="nb">name</span> <span class="o">&lt;&lt;</span> <span class="s1">', you rock!'</span>
+<span class="k">end</span>
+
+<span class="nb">name</span> <span class="o">=</span> <span class="s1">'Cameron'</span>
+<span class="n">compliment</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
+<span class="nb">name</span>  <span class="c1"># =&gt; "Cameron, you rock!"</span>
+</code></pre></div></div>
+
+<p>The caller probably isn’t expecting <code class="highlighter-rouge">compliment</code> to mutate <code class="highlighter-rouge">name</code>.</p>
+
+<p>The same principle applies to data referenced by an object’s instance variables. Mutating only copies of your data prevents these sorts of surprises.</p>
+
+<h3 id="back-to-attr_reader">Back to <code class="highlighter-rouge">attr_reader</code></h3>
+
+<p>Ok, but what does all this have to do with <code class="highlighter-rouge">attr_reader</code>?</p>
+
+<p>In his usual erudite manner, Jason lays out the case against <code class="highlighter-rouge">attr_reader</code> with the following statement:</p>
+
+<blockquote>
+  <p><strong>Adding a public <code class="highlighter-rouge">attr_reader</code> throws away the benefits of encapsulation</strong></p>
+
+  <p>Private instance variables are useful for the same reason as private methods: <strong>because you know they’re not depended on by outside clients</strong>.</p>
+
+  <p>If I have a class that has an instance variable called <code class="highlighter-rouge">@price</code>, I know that I can rename that instance variable to <code class="highlighter-rouge">@cost</code> or change it to <code class="highlighter-rouge">@price_cents</code> (changing the whole meaning of the value) or even kill <code class="highlighter-rouge">@price</code> altogether. What I want to do with <code class="highlighter-rouge">@price</code> is 100% my business. This is great.</p>
+</blockquote>
+
+<p>Hopefully I’ve shown in this article why encapsulation is more or less a myth. There’s no way to know who else may reference the same data as your instance variables, so it very well may not be “100% your business.” This is especially true if one of your methods returns it somehow, perhaps wrapped by another object.</p>
+
+<p>I do agree that adding <code class="highlighter-rouge">attr_reader :price</code> changes the class’s public interface, making it more difficult to change in the future. Unless you’re developing library code or a gem however, I think the public interface argument is fairly weak. As Jason says a few paragraphs earlier, if a naming issue causes a problem in your application, your application probably isn’t tested well enough.</p>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>My takeaway message is this: encapsulation doesn’t provide the guarantees we were taught it does. There’s no real benefit to “hiding” data inside an object, since that data may be referenced - privately or publicly - by any number of other objects. You might as well expose your instance variables with <code class="highlighter-rouge">attr_reader</code> for the inheritance benefits.</p>
+
+<p>Disagree? <a href="https://twitter.com/camertron">Hit me up</a> on Twitter.</p>
+
+      </div>
+    </div>
+  </section>
+</article>
+
+    </main>
+
+    <footer class="footer">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-5">
+        <div class="logo">
+          Camertron's Blog
+        </div>
+
+        <h4>
+          My thoughts on programming, mostly with Ruby
+        </h4>
+
+        <div class="mt-3">
+          Follow on Twitter: <strong><a href="https://twitter.com/camertron">@camertron</strong></a>
+        </div>
+
+      </div>
+      <div class="column is-4">
+      </div>
+      <div class="column is-3">
+        <h4>
+          <strong>Share</strong> on Social Media
+        </h4>
+
+        <div class="mt-5">
+          <a href="https://twitter.com/intent/tweet?url=&via=camertron&text=Check%20out%20this%20awesome%20new%20site%20built%20with%20Bridgetown%20and%20Ruby%21&hashtags=SpinUpBridgetown%2CJamstack" class="button is-info">
+            <span class="icon"> <i class="fa fa-twitter is-size-5"></i> </span>
+            <span class="has-text-weight-bold">Tweet</span>
+          </a>
+        </div>
+
+        <div class="mt-6">
+          <a href="/feed.xml" class="button is-danger is-small">
+            <span class="icon"> <i class="fa fa-rss"></i> </span>
+            <span class="has-text-weight-bold">News Feed</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  </body>
+</html>
