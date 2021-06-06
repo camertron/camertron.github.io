@@ -4,6 +4,6 @@
 <title>{% if page_title != "" %}{{ page_title | escape }} | {{ metadata.title | escape }}{% else %}{{ metadata.title | escape }}: {{ metadata.tagline | escape }}{% endif %}</title>
 
 <meta name="description" content="{{ metadata.description }}" />
-
+{% feed_meta %}
 <link rel="stylesheet" href="{% webpack_path css %}" />
 <script src="{% webpack_path js %}" defer></script>

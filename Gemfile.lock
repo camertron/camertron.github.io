@@ -40,6 +40,8 @@ GEM
       thor (~> 1.1)
       tilt (~> 2.0)
       webrick (~> 1.7)
+    bridgetown-feed (2.0.1)
+      bridgetown (>= 0.20, < 2.0)
     bridgetown-paginate (0.20.0)
       bridgetown-core (= 0.20.0)
     bridgetown-quick-search (1.0.5)
@@ -99,9 +101,11 @@ GEM
 
 PLATFORMS
   x86_64-darwin-19
+  x86_64-linux
 
 DEPENDENCIES
   bridgetown (~> 0.20.0)
+  bridgetown-feed (~> 2.0)
   bridgetown-quick-search (~> 1.0)
   bulmatown (~> 1.1)
 
