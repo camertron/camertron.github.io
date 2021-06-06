@@ -23,3 +23,13 @@ group :bridgetown_plugins do
   gem "bridgetown-quick-search", "~> 1.0"
   gem "bridgetown-feed",  "~> 2.0"
 end
+
+
+group :test, optional: true do
+  gem "nokogiri"
+  gem "minitest"
+  gem "minitest-profile"
+  gem "minitest-reporters"
+  gem "shoulda"
+  gem "rails-dom-testing"
+end
