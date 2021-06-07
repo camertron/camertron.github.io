@@ -18,6 +18,18 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 gem "bridgetown", "~> 0.20.0"
 
-gem "bulmatown", "~> 1.1", :group => :bridgetown_plugins
+group :bridgetown_plugins do
+  gem "bulmatown", "~> 1.1"
+  gem "bridgetown-quick-search", "~> 1.0"
+  gem "bridgetown-feed",  "~> 2.0"
+end
 
-gem "bridgetown-quick-search", "~> 1.0", :group => :bridgetown_plugins
+
+group :test, optional: true do
+  gem "nokogiri"
+  gem "minitest"
+  gem "minitest-profile"
+  gem "minitest-reporters"
+  gem "shoulda"
+  gem "rails-dom-testing"
+end
