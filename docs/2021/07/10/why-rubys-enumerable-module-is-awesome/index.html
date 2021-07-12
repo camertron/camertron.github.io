@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Why Ruby&#39;s Enumerable Module is Awesome | Camertron&#39;s Blog</title>
+
+<meta name="description" content="My thoughts on programming, mostly using Ruby and Rails." />
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Camertron's Blog" />
+<link rel="stylesheet" href="/_bridgetown/static/css/main.3b31937342ab74462d68.css" />
+<script src="/_bridgetown/static/js/main.3d6f7e53a82bf8c3de0c.js" defer></script>
+
+  </head>
+  <body class="post ">
+    <nav class="navbar is-dark">
+  <div class="navbar-brand">
+    
+    <a class="navbar-item" href="/">
+      Camertron's Blog
+    </a>
+  
+    <div class="navbar-burger burger" data-target="top-navbar" onclick="this.classList.toggle('is-active');document.querySelector('#top-navbar').classList.toggle('is-active')">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <div id="top-navbar" class="navbar-menu">
+    <div class="navbar-start">
+      
+    <a class="navbar-item" href="/">Home</a>
+    <a class="navbar-item" href="/posts">Articles</a>
+    
+  
+    </div>
+
+    <div class="navbar-end">
+      
+    <div class="navbar-item search-item">
+      <bridgetown-search-form>
+  <input slot="input" type="search" class="input" placeholder="Search" />
+  <bridgetown-search-results theme=""></bridgetown-search-results>
+</bridgetown-search-form>
+
+    </div>
+    <a class="navbar-item is-hidden-desktop-only" href="https://twitter.com/camertron" target="_blank">
+      <span class="icon"><i class="fa fa-twitter is-size-6"></i></span>
+      <span class="is-hidden-tablet">Twitter</span>
+    </a>
+        
+    </div>
+  </div>
+</nav>
+
+
+    <main>
+      <article class="h-entry">
+  <header class="hero is-dark is-medium is-bold has-text-centered">
+  <div>
+    <div class="hero-body">
+      <div class="container is-fluid">
+        <h1 class="p-name title is-2 is-spaced has-text-light">
+          Why Ruby’s Enumerable Module is Awesome
+        </h1>
+        
+      </div>
+    </div>
+  </div>
+</header>
+
+
+  <section class="section">
+    <div class="container">
+
+      <div class="content e-content">
+        <p>This post was originally written in 2014 at the beginning of my tenure at Lumos Labs. At the time, I was a member of the Learning Team, an “extracurricular” group that met bi-weekly to discuss cool things we were learning about technology. We organized tech meetups in our office space, streamed live Google IO talks over the projector during lunch, and sent out a digest email to our colleagues every two weeks with links to various learning resources. I ended up writing a few longer-form articles for these email blasts. What follows is an embellished version of one of those articles.</p>
+
+<p><strong>Published on June 11th, 2021</strong></p>
+
+<p>You’re probably familiar with the concept of “iteration” in computer programming. It’s the idea of examining - or iterating over - each of the things in a collection.</p>
+
+<p>Perhaps the most obvious thing you can iterate over is an array. The elements of an array are accessed by their index, so iterating is pretty straightforward. Here’s an example in pseudocode:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>array = [5, 3, 8]
+
+for i = 0 to array.length
+  do something with array[i]
+end
+</code></pre></div></div>
+
+<p>This code iterates over each item in the array. Inside the body of the loop, elements are accessed individually using the <code class="highlighter-rouge">[]</code> syntax.</p>
+
+<p>We can do the same thing in Ruby using the <code class="highlighter-rouge">for</code> keyword:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">array</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="k">in</span> <span class="mi">0</span><span class="o">...</span><span class="mi">3</span>
+  <span class="c1"># do something with array[i]</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="each"><code class="highlighter-rouge">#each</code></h3>
+
+<p>The truth is though, in 11 years writing Ruby code, I’ve never, not even once, seen anyone use a <code class="highlighter-rouge">for</code> loop. Instead, Ruby programmers reach for the <code class="highlighter-rouge">#each</code> method. <code class="highlighter-rouge">#each</code> yields each element to the given block. Here’s a quick example that prints out each of the numbers in the array:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">].</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">number</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="n">number</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Not only is the code easier to read with <code class="highlighter-rouge">#each</code>, it’s more obvious what it does. <code class="highlighter-rouge">#each</code> abstracts away the details of the iteration logic and lets the programmer focus on their goal: handling one element at a time.</p>
+
+<h3 id="sum-of-integers">Sum of Integers</h3>
+
+<p>Let’s get a little more adventurous and use Ruby to compute the sum of all the elements in our array.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">].</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">number</span><span class="o">|</span>
+  <span class="n">sum</span> <span class="o">+=</span> <span class="n">number</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>When <code class="highlighter-rouge">#each</code> returns, <code class="highlighter-rouge">sum</code> will contain 16.</p>
+
+<h3 id="the-magic-of-inject">The Magic of <code class="highlighter-rouge">#inject</code></h3>
+
+<p>It would be great if we could get rid of that extra local variable, <code class="highlighter-rouge">sum</code>. Fortunately, Ruby’s <code class="highlighter-rouge">#inject</code> method can help. Here’s how we might use it to sum up the elements in our array:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">].</span><span class="nf">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">sum</span><span class="p">,</span> <span class="n">number</span><span class="o">|</span>
+  <span class="n">sum</span> <span class="o">+</span> <span class="n">number</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Pretty cool, eh? The <code class="highlighter-rouge">#inject</code> method calls the block for each number, passing the <em>previous</em> result as the first argument and the next element from the array as the second argument (the previous result is simply the value returned by the block during the previous iteration).</p>
+
+<p>I can hear some of you saying, “Whoa, slow down. What just happened?!” Ok, let’s break it down step-by-step.</p>
+
+<ol>
+  <li>First iteration (<code class="highlighter-rouge">sum</code> is set to the initial value passed to <code class="highlighter-rouge">#inject</code>, which is <code class="highlighter-rouge">0</code>)
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">].</span><span class="nf">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">sum</span><span class="p">,</span> <span class="n">number</span><span class="o">|</span>
+   <span class="c1"># sum = 0 (initial value passed to #inject above)</span>
+   <span class="c1"># number = 5 (first element of array)</span>
+   <span class="c1"># 0 + 5 = 5</span>
+   <span class="n">sum</span> <span class="o">+</span> <span class="n">number</span>
+   <span class="c1"># 5 becomes the return value of the block</span>
+ <span class="k">end</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Second iteration
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">].</span><span class="nf">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">sum</span><span class="p">,</span> <span class="n">number</span><span class="o">|</span>
+   <span class="c1"># sum = 5 (from previous iteration)</span>
+   <span class="c1"># number = 3 (second element of array)</span>
+   <span class="c1"># 5 + 3 = 8</span>
+   <span class="n">sum</span> <span class="o">+</span> <span class="n">number</span>
+   <span class="c1"># 8 becomes the return value of the block</span>
+ <span class="k">end</span>
+</code></pre></div>    </div>
+  </li>
+  <li>Third iteration
+    <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">].</span><span class="nf">inject</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">sum</span><span class="p">,</span> <span class="n">number</span><span class="o">|</span>
+   <span class="c1"># sum = 8 (from previous iteration)</span>
+   <span class="c1"># number = 8 (third element of array)</span>
+   <span class="c1"># 8 + 8 = 16</span>
+   <span class="n">sum</span> <span class="o">+</span> <span class="n">number</span>
+   <span class="c1"># 16 becomes the return value of the block</span>
+ <span class="k">end</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>Since there are only three elements in the array, iteration stops and the final sum of 16 is returned.</p>
+
+<h3 id="even-more-magic">Even More Magic</h3>
+
+<p>As it happens, there’s an even more succinct way to do this. <code class="highlighter-rouge">#inject</code> supports passing a symbol as the first argument. The symbol must be the name of a method that can be called on the elements of the array. Since we’re adding in this case, we can pass the <code class="highlighter-rouge">:+</code> symbol, which represents the <code class="highlighter-rouge">#+</code> method on <code class="highlighter-rouge">Integer</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">].</span><span class="nf">inject</span><span class="p">(:</span><span class="o">+</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>No block necessary! <code class="highlighter-rouge">#inject</code> automatically keeps track of the previous value and adds it to the next element on each iteration. As above, this code produces the value 16.</p>
+
+<h3 id="the-enumerable-module">The <code class="highlighter-rouge">Enumerable</code> Module</h3>
+
+<p>The <code class="highlighter-rouge">#inject</code> method is only one of the <strong>many</strong> methods provided by Ruby’s <code class="highlighter-rouge">Enumerable</code> module. <code class="highlighter-rouge">Enumerable</code> is included in <code class="highlighter-rouge">Array</code>, <code class="highlighter-rouge">Hash</code>, and other core classes, providing a uniform way to iterate over all the items in a collection.</p>
+
+<p>This is where things get really interesting - <code class="highlighter-rouge">Enumerable</code> has a <em>ton</em> of cool methods. Need to process a collection in a specific or special way? Chances are there’s an <code class="highlighter-rouge">Enumerable</code> method (or methods) for it.</p>
+
+<p>Accordingly, let’s take a look at a couple of the other useful tools in the <code class="highlighter-rouge">Enumerable</code> toolkit.</p>
+
+<h3 id="enumerablemap"><code class="highlighter-rouge">Enumerable#map</code></h3>
+
+<p><code class="highlighter-rouge">#map</code> is probably the next most commonly used <code class="highlighter-rouge">Enumerable</code> method after <code class="highlighter-rouge">#each</code>. It collects the results of the block into an array and returns it. For example, here’s how we might multiply every element in our array by 2:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">].</span><span class="nf">map</span> <span class="k">do</span> <span class="o">|</span><span class="n">number</span><span class="o">|</span>
+  <span class="n">number</span> <span class="o">*</span> <span class="mi">2</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>After running this code, <code class="highlighter-rouge">result</code> will contain <code class="highlighter-rouge">[10, 6, 16]</code>.</p>
+
+<h3 id="enumerableeach_slice"><code class="highlighter-rouge">Enumerable#each_slice</code></h3>
+
+<p>Another great example of <code class="highlighter-rouge">Enumerable</code>’s utility is <code class="highlighter-rouge">each_slice</code>, which yields sub arrays of the given length to the block. For example, the following code turns this flat array of ingredients into a hash:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">recipe</span> <span class="o">=</span> <span class="p">{}.</span><span class="nf">tap</span> <span class="k">do</span> <span class="o">|</span><span class="n">result</span><span class="o">|</span>
+  <span class="p">[</span><span class="ss">:eggs</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="ss">:carrots</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="ss">:bell_peppers</span><span class="p">,</span> <span class="mi">3</span><span class="p">].</span><span class="nf">each_slice</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">food</span><span class="p">,</span> <span class="n">amount</span><span class="o">|</span>
+    <span class="n">result</span><span class="p">[</span><span class="n">food</span><span class="p">]</span> <span class="o">=</span> <span class="n">amount</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>The desired length of each slice is passed as the first argument to <code class="highlighter-rouge">#each_slice</code>, eg. <code class="highlighter-rouge">each_slice(2)</code> as above.</p>
+
+<p>After running this code, <code class="highlighter-rouge">recipe</code> will contain <code class="highlighter-rouge">{ eggs: 2, carrots: 1, bell_peppers: 3 }</code>.</p>
+
+<p>As an aside, notice that you can also assign the elements of the sub-array to individual block parameters, eg. <code class="highlighter-rouge">food</code> and <code class="highlighter-rouge">amount</code>. If only one parameter is specified, it will contain an array with two elements.</p>
+
+<h3 id="but-wait-theres-more">But Wait, There’s More!</h3>
+
+<p>Check out the plethora of other <code class="highlighter-rouge">Enumerable</code> methods in Ruby’s <a href="https://ruby-doc.org/core-3.0.1/Enumerable.html">official documentation</a>.</p>
+
+<h3 id="custom-enumerators">Custom Enumerators</h3>
+
+<p>We’ve seen a few examples of <code class="highlighter-rouge">Enumerable</code>’s awesomeness so far, but in my opinion its real power can only be truly experienced in combination with custom enumerators.</p>
+
+<p>Let’s say you’re writing a client that communicates with a search API. The API returns search results in pages (i.e. batches) of 50.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SearchClient</span>
+  <span class="k">def</span> <span class="nf">search_for</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="ss">page: </span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">http_get</span><span class="p">(</span><span class="s1">'/search'</span><span class="p">,</span> <span class="ss">keywords: </span><span class="n">keywords</span><span class="p">,</span> <span class="ss">page: </span><span class="n">page</span><span class="p">)</span>
+    <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="nf">body</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">http_get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+    <span class="o">...</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>To fetch all the search results, the caller makes multiple calls to the <code class="highlighter-rouge">#search_for</code> method.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span> <span class="o">=</span> <span class="no">SearchClient</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">page</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="kp">loop</span> <span class="k">do</span>
+  <span class="n">results</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">search_for</span><span class="p">(</span><span class="s1">'avocado'</span><span class="p">,</span> <span class="ss">page: </span><span class="n">page</span><span class="p">)</span>
+  <span class="k">break</span> <span class="k">if</span> <span class="n">results</span><span class="p">.</span><span class="nf">empty?</span>
+
+  <span class="n">results</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">result</span><span class="o">|</span>
+    <span class="c1"># do something with search result</span>
+  <span class="k">end</span>
+
+  <span class="n">page</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>This approach works great, but forces the caller to understand how the API works. Specifically it requires the caller to know that results are paginated and that an empty result set indicates all results have been retrieved.</p>
+
+<p>Let’s move the pagination logic into a separate class.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">SearchClient</span>
+  <span class="k">def</span> <span class="nf">search_for</span><span class="p">(</span><span class="n">keywords</span><span class="p">)</span>
+    <span class="no">SearchResultSet</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">http_get</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span>
+    <span class="o">...</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">SearchResultSet</span>
+  <span class="nb">attr_reader</span> <span class="ss">:client</span><span class="p">,</span> <span class="ss">:keywords</span>
+
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">keywords</span><span class="p">)</span>
+    <span class="vi">@client</span> <span class="o">=</span> <span class="n">client</span>
+    <span class="vi">@keywords</span> <span class="o">=</span> <span class="n">keywords</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">each</span>
+    <span class="n">page</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="kp">loop</span> <span class="k">do</span>
+      <span class="n">results</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">http_get</span><span class="p">(</span><span class="s1">'/search'</span><span class="p">,</span> <span class="ss">keywords: </span><span class="n">keywords</span><span class="p">,</span> <span class="ss">page: </span><span class="n">page</span><span class="p">)</span>
+      <span class="k">break</span> <span class="k">if</span> <span class="n">results</span><span class="p">.</span><span class="nf">empty?</span>
+
+      <span class="no">JSON</span><span class="p">.</span><span class="nf">parse</span><span class="p">(</span><span class="n">results</span><span class="p">).</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">result</span><span class="o">|</span>
+        <span class="k">yield</span> <span class="n">result</span>
+      <span class="k">end</span>
+
+      <span class="n">page</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Notice how our <code class="highlighter-rouge">SearchResultSet</code> class transparently encapsulates the API’s pagination behavior. The caller no longer has to know how the API works. Instead, callers simply fetch results and iterate over them using a mechanism they’re already familar with - <code class="highlighter-rouge">#each</code>.</p>
+
+<p>Here’s an example.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span> <span class="o">=</span> <span class="no">SearchClient</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">search_for</span><span class="p">(</span><span class="s1">'avocados'</span><span class="p">)</span>
+<span class="n">results</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">result</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="n">result</span><span class="p">[</span><span class="s1">'id'</span><span class="p">]</span>  <span class="c1"># or whatever</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="mixing-in-enumerable">Mixing in <code class="highlighter-rouge">Enumerable</code></h3>
+
+<p>Remember when I said a bunch of Ruby’s core classes like <code class="highlighter-rouge">Array</code> and <code class="highlighter-rouge">Hash</code> include <code class="highlighter-rouge">Enumerable</code>? I meant that they quite literally <code class="highlighter-rouge">include</code> the <code class="highlighter-rouge">Enumerable</code> module.</p>
+
+<p>And because <code class="highlighter-rouge">Enumerable</code> is just a regular ‘ol Ruby module, <strong><em>you can include it too</em></strong>.</p>
+
+<p>In fact, <code class="highlighter-rouge">Enumerable</code> was <em>designed</em> to be mixed into (i.e. <code class="highlighter-rouge">include</code>d) into any Ruby class. The only requirement is that the class defines an <code class="highlighter-rouge">#each</code> method.</p>
+
+<p><strong><em>That’s because every other <code class="highlighter-rouge">Enumerable</code> method is implemented in terms of <code class="highlighter-rouge">#each</code></em></strong>.</p>
+
+<p>Yes, that’s right. Simply defining an <code class="highlighter-rouge">#each</code> method and <code class="highlighter-rouge">include</code>ing the <code class="highlighter-rouge">Enumerable</code> module into your class gives you all the power of <code class="highlighter-rouge">Enumerable</code> <strong>FOR FREE</strong>. In other words, you get <code class="highlighter-rouge">#map</code>, <code class="highlighter-rouge">#each_slice</code>, and all the other <code class="highlighter-rouge">Enumerable</code> methods without having to lift a finger.</p>
+
+<p>Let’s <code class="highlighter-rouge">include Enumerable</code> into our <code class="highlighter-rouge">SearchResultSet</code> class. With that very minimal effort, this is now possible:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">client</span> <span class="o">=</span> <span class="no">SearchClient</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="nf">search_for</span><span class="p">(</span><span class="s1">'avocados'</span><span class="p">)</span>
+<span class="n">ids</span> <span class="o">=</span> <span class="n">results</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">result</span><span class="o">|</span> <span class="n">result</span><span class="p">[</span><span class="s1">'id'</span><span class="p">]</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Notice that we didn’t define <code class="highlighter-rouge">#map</code> on <code class="highlighter-rouge">SearchResultSet</code> directly - it came from <code class="highlighter-rouge">Enumerable</code>. By the same token, <code class="highlighter-rouge">#each_slice</code>, <code class="highlighter-rouge">#each_cons</code>, <code class="highlighter-rouge">#inject</code>, and many, many other useful methods are now available too. What’s more, they all Just Work. Not bad for a few lines of code.</p>
+
+<h3 id="the-case-of-the-missing-block">The Case of the Missing Block</h3>
+
+<p>There’s one last thing I’d like to talk about before wrapping up, and that’s lazy enumerators.</p>
+
+<p>What happens if we call <code class="highlighter-rouge">SearchResultSet#each</code> without a block?</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">results</span><span class="p">.</span><span class="nf">each</span>
+<span class="c1"># =&gt; LocalJumpError: yield called out of block</span>
+</code></pre></div></div>
+
+<p>Hmm, that’s weird. I don’t get an error if I try the same thing on an array:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">].</span><span class="nf">each</span>
+<span class="c1"># =&gt; #&lt;Enumerator: [5, 3, 8]:each&gt;</span>
+</code></pre></div></div>
+
+<p>In Ruby, the <code class="highlighter-rouge">yield</code> keyword doesn’t check to make sure the caller passed a block. We can therefore avoid the <code class="highlighter-rouge">LocalJumpError</code> by checking for the block, and bailing out if one wasn’t passed.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">each</span>
+  <span class="k">return</span> <span class="k">unless</span> <span class="nb">block_given?</span>
+
+  <span class="n">page</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="o">...</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Ok, let’s try that again:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">results</span><span class="p">.</span><span class="nf">each</span>
+<span class="c1"># =&gt; nil</span>
+</code></pre></div></div>
+
+<p>Not quite what we wanted, but at least there’s no error. We need to figure out how to return the same kind of <code class="highlighter-rouge">Enumerator</code> object we got when calling a blockless <code class="highlighter-rouge">#each</code> on an array.</p>
+
+<h3 id="kernelto_enum"><code class="highlighter-rouge">Kernel#to_enum</code></h3>
+
+<p>Fortunately, there’s an easy way to convert any function into an <code class="highlighter-rouge">Enumerator</code> - Ruby’s <code class="highlighter-rouge">Kernel#to_enum</code>.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">each</span>
+  <span class="k">return</span> <span class="n">to_enum</span><span class="p">(</span><span class="ss">:each</span><span class="p">)</span> <span class="k">unless</span> <span class="nb">block_given?</span>
+
+  <span class="n">page</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="o">...</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Now, calling <code class="highlighter-rouge">SearchResultSet#each</code> without a block will return an <code class="highlighter-rouge">Enumerator</code> object.</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">results</span><span class="p">.</span><span class="nf">each</span>
+<span class="c1"># =&gt; #&lt;Enumerator: #&lt;SearchResultSet:0x00007fa715aaee70 @client=#&lt;SearchClient:0x00007fa715aaeec0&gt;, @keywords="avocado"&gt;:each&gt;</span>
+</code></pre></div></div>
+
+<h3 id="chaining-enumerators">Chaining Enumerators</h3>
+
+<p>Ok, so why do this? While not particularly important for the <code class="highlighter-rouge">#each</code> method, returning an <code class="highlighter-rouge">Enumerator</code> when called without a block is the way all the other <code class="highlighter-rouge">Enumerable</code> methods work. I think it’s a good idea to be consistent.</p>
+
+<p>Another less important reason is to enable chaining. <code class="highlighter-rouge">Enumerator</code>s respond to all the methods in <code class="highlighter-rouge">Enumerable</code>, meaning things like this are possible:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">enum</span> <span class="o">=</span> <span class="n">results</span><span class="p">.</span><span class="nf">each</span>
+<span class="n">enum</span><span class="p">.</span><span class="nf">map</span><span class="p">.</span><span class="nf">with_index</span> <span class="k">do</span> <span class="o">|</span><span class="n">result</span><span class="p">,</span> <span class="n">idx</span><span class="o">|</span>
+  <span class="c1"># result is the search result, and idx is a counter automatically</span>
+  <span class="c1"># incremented on each iteration</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h3 id="conclusion">Conclusion</h3>
+
+<p>Enumerators and the <code class="highlighter-rouge">Enumerable</code> module are my all-time favorite Ruby features. They are what got me hooked on Ruby when I first started using it back in 2011. No other language I’ve used has been able to match the same level of expressiveness and flexibility.</p>
+
+<p>I hope this post inspires you to use <code class="highlighter-rouge">Enumerable</code> in new and interesting ways!</p>
+
+      </div>
+    </div>
+  </section>
+</article>
+
+    </main>
+
+    <footer class="footer">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-5">
+        <div class="logo">
+          Camertron's Blog
+        </div>
+
+        <h4>
+          My thoughts on programming, mostly with Ruby
+        </h4>
+
+        <div class="mt-3">
+          Follow on Twitter: <strong><a href="https://twitter.com/camertron">@camertron</strong></a>
+        </div>
+
+      </div>
+      <div class="column is-4">
+      </div>
+      <div class="column is-3">
+        <h4>
+          <strong>Share</strong> on Social Media
+        </h4>
+
+        <div class="mt-5">
+          <a href="https://twitter.com/intent/tweet?url=&via=camertron&text=Check%20out%20this%20awesome%20new%20site%20built%20with%20Bridgetown%20and%20Ruby%21&hashtags=SpinUpBridgetown%2CJamstack" class="button is-info">
+            <span class="icon"> <i class="fa fa-twitter is-size-5"></i> </span>
+            <span class="has-text-weight-bold">Tweet</span>
+          </a>
+        </div>
+
+        <div class="mt-6">
+          <a href="/feed.xml" class="button is-danger is-small">
+            <span class="icon"> <i class="fa fa-rss"></i> </span>
+            <span class="has-text-weight-bold">News Feed</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  </body>
+</html>

@@ -1,4 +1,326 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://bridgetownrb.com/" version="0.20.0">Bridgetown</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-06-07T10:22:07-07:00</updated><id>/feed.xml</id><title type="html">Camertron’s Blog</title><subtitle>My thoughts on programming, mostly using Ruby and Rails.</subtitle><entry><title type="html">Encapsulation is a Lie</title><link href="/2021/05/28/encapsulation-is-a-lie/" rel="alternate" type="text/html" title="Encapsulation is a Lie" /><published>2021-05-28T12:03:30-07:00</published><updated>2021-05-28T12:03:30-07:00</updated><id>/2021/05/28/encapsulation-is-a-lie</id><content type="html" xml:base="/2021/05/28/encapsulation-is-a-lie/">&lt;p&gt;In this post I respond to another of Jason Swett’s recent articles, &lt;a href=&quot;https://www.codewithjason.com/dont-wrap-instance-variables-attr_reader-unless-necessary/&quot;&gt;Don’t wrap instance variables in attr_reader unless necessary&lt;/a&gt;. Jason, if you’re reading this please know this blog isn’t only about critiquing your writing, which I find insightful and thought-provoking. You’ve really gotten me thinking lately, and I’ve been meaning to start a blog for a long time anyway. Seemed like a good opportunity to finally get one going.&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://bridgetownrb.com/" version="0.20.0">Bridgetown</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-07-11T22:21:58-07:00</updated><id>/feed.xml</id><title type="html">Camertron’s Blog</title><subtitle>My thoughts on programming, mostly using Ruby and Rails.</subtitle><entry><title type="html">Why Ruby’s Enumerable Module is Awesome</title><link href="/2021/07/10/why-rubys-enumerable-module-is-awesome/" rel="alternate" type="text/html" title="Why Ruby's Enumerable Module is Awesome" /><published>2021-07-10T10:00:00-07:00</published><updated>2021-07-10T10:00:00-07:00</updated><id>/2021/07/10/why-rubys-enumerable-module-is-awesome</id><content type="html" xml:base="/2021/07/10/why-rubys-enumerable-module-is-awesome/">&lt;p&gt;This post was originally written in 2014 at the beginning of my tenure at Lumos Labs. At the time, I was a member of the Learning Team, an “extracurricular” group that met bi-weekly to discuss cool things we were learning about technology. We organized tech meetups in our office space, streamed live Google IO talks over the projector during lunch, and sent out a digest email to our colleagues every two weeks with links to various learning resources. I ended up writing a few longer-form articles for these email blasts. What follows is an embellished version of one of those articles.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Published on June 11th, 2021&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;You’re probably familiar with the concept of “iteration” in computer programming. It’s the idea of examining - or iterating over - each of the things in a collection.&lt;/p&gt;
+
+&lt;p&gt;Perhaps the most obvious thing you can iterate over is an array. The elements of an array are accessed by their index, so iterating is pretty straightforward. Here’s an example in pseudocode:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;array = [5, 3, 8]
+
+for i = 0 to array.length
+  do something with array[i]
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This code iterates over each item in the array. Inside the body of the loop, elements are accessed individually using the &lt;code class=&quot;highlighter-rouge&quot;&gt;[]&lt;/code&gt; syntax.&lt;/p&gt;
+
+&lt;p&gt;We can do the same thing in Ruby using the &lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt; keyword:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# do something with array[i]&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;each&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;#each&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;The truth is though, in 11 years writing Ruby code, I’ve never, not even once, seen anyone use a &lt;code class=&quot;highlighter-rouge&quot;&gt;for&lt;/code&gt; loop. Instead, Ruby programmers reach for the &lt;code class=&quot;highlighter-rouge&quot;&gt;#each&lt;/code&gt; method. &lt;code class=&quot;highlighter-rouge&quot;&gt;#each&lt;/code&gt; yields each element to the given block. Here’s a quick example that prints out each of the numbers in the array:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Not only is the code easier to read with &lt;code class=&quot;highlighter-rouge&quot;&gt;#each&lt;/code&gt;, it’s more obvious what it does. &lt;code class=&quot;highlighter-rouge&quot;&gt;#each&lt;/code&gt; abstracts away the details of the iteration logic and lets the programmer focus on their goal: handling one element at a time.&lt;/p&gt;
+
+&lt;h3 id=&quot;sum-of-integers&quot;&gt;Sum of Integers&lt;/h3&gt;
+
+&lt;p&gt;Let’s get a little more adventurous and use Ruby to compute the sum of all the elements in our array.&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+
+&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;When &lt;code class=&quot;highlighter-rouge&quot;&gt;#each&lt;/code&gt; returns, &lt;code class=&quot;highlighter-rouge&quot;&gt;sum&lt;/code&gt; will contain 16.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-magic-of-inject&quot;&gt;The Magic of &lt;code class=&quot;highlighter-rouge&quot;&gt;#inject&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;It would be great if we could get rid of that extra local variable, &lt;code class=&quot;highlighter-rouge&quot;&gt;sum&lt;/code&gt;. Fortunately, Ruby’s &lt;code class=&quot;highlighter-rouge&quot;&gt;#inject&lt;/code&gt; method can help. Here’s how we might use it to sum up the elements in our array:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Pretty cool, eh? The &lt;code class=&quot;highlighter-rouge&quot;&gt;#inject&lt;/code&gt; method calls the block for each number, passing the &lt;em&gt;previous&lt;/em&gt; result as the first argument and the next element from the array as the second argument (the previous result is simply the value returned by the block during the previous iteration).&lt;/p&gt;
+
+&lt;p&gt;I can hear some of you saying, “Whoa, slow down. What just happened?!” Ok, let’s break it down step-by-step.&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;First iteration (&lt;code class=&quot;highlighter-rouge&quot;&gt;sum&lt;/code&gt; is set to the initial value passed to &lt;code class=&quot;highlighter-rouge&quot;&gt;#inject&lt;/code&gt;, which is &lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;)
+    &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;# sum = 0 (initial value passed to #inject above)&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;# number = 5 (first element of array)&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;# 0 + 5 = 5&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;# 5 becomes the return value of the block&lt;/span&gt;
+ &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Second iteration
+    &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;# sum = 5 (from previous iteration)&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;# number = 3 (second element of array)&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;# 5 + 3 = 8&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;# 8 becomes the return value of the block&lt;/span&gt;
+ &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Third iteration
+    &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;# sum = 8 (from previous iteration)&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;# number = 8 (third element of array)&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;# 8 + 8 = 16&lt;/span&gt;
+   &lt;span class=&quot;n&quot;&gt;sum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;
+   &lt;span class=&quot;c1&quot;&gt;# 16 becomes the return value of the block&lt;/span&gt;
+ &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Since there are only three elements in the array, iteration stops and the final sum of 16 is returned.&lt;/p&gt;
+
+&lt;h3 id=&quot;even-more-magic&quot;&gt;Even More Magic&lt;/h3&gt;
+
+&lt;p&gt;As it happens, there’s an even more succinct way to do this. &lt;code class=&quot;highlighter-rouge&quot;&gt;#inject&lt;/code&gt; supports passing a symbol as the first argument. The symbol must be the name of a method that can be called on the elements of the array. Since we’re adding in this case, we can pass the &lt;code class=&quot;highlighter-rouge&quot;&gt;:+&lt;/code&gt; symbol, which represents the &lt;code class=&quot;highlighter-rouge&quot;&gt;#+&lt;/code&gt; method on &lt;code class=&quot;highlighter-rouge&quot;&gt;Integer&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;inject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(:&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;No block necessary! &lt;code class=&quot;highlighter-rouge&quot;&gt;#inject&lt;/code&gt; automatically keeps track of the previous value and adds it to the next element on each iteration. As above, this code produces the value 16.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-enumerable-module&quot;&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; Module&lt;/h3&gt;
+
+&lt;p&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;#inject&lt;/code&gt; method is only one of the &lt;strong&gt;many&lt;/strong&gt; methods provided by Ruby’s &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; module. &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; is included in &lt;code class=&quot;highlighter-rouge&quot;&gt;Array&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash&lt;/code&gt;, and other core classes, providing a uniform way to iterate over all the items in a collection.&lt;/p&gt;
+
+&lt;p&gt;This is where things get really interesting - &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; has a &lt;em&gt;ton&lt;/em&gt; of cool methods. Need to process a collection in a specific or special way? Chances are there’s an &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; method (or methods) for it.&lt;/p&gt;
+
+&lt;p&gt;Accordingly, let’s take a look at a couple of the other useful tools in the &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; toolkit.&lt;/p&gt;
+
+&lt;h3 id=&quot;enumerablemap&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable#map&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;#map&lt;/code&gt; is probably the next most commonly used &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; method after &lt;code class=&quot;highlighter-rouge&quot;&gt;#each&lt;/code&gt;. It collects the results of the block into an array and returns it. For example, here’s how we might multiply every element in our array by 2:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;number&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;After running this code, &lt;code class=&quot;highlighter-rouge&quot;&gt;result&lt;/code&gt; will contain &lt;code class=&quot;highlighter-rouge&quot;&gt;[10, 6, 16]&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;enumerableeach_slice&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable#each_slice&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Another great example of &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt;’s utility is &lt;code class=&quot;highlighter-rouge&quot;&gt;each_slice&lt;/code&gt;, which yields sub arrays of the given length to the block. For example, the following code turns this flat array of ingredients into a hash:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;recipe&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;tap&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:eggs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:carrots&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:bell_peppers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each_slice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;food&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;food&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The desired length of each slice is passed as the first argument to &lt;code class=&quot;highlighter-rouge&quot;&gt;#each_slice&lt;/code&gt;, eg. &lt;code class=&quot;highlighter-rouge&quot;&gt;each_slice(2)&lt;/code&gt; as above.&lt;/p&gt;
+
+&lt;p&gt;After running this code, &lt;code class=&quot;highlighter-rouge&quot;&gt;recipe&lt;/code&gt; will contain &lt;code class=&quot;highlighter-rouge&quot;&gt;{ eggs: 2, carrots: 1, bell_peppers: 3 }&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;As an aside, notice that you can also assign the elements of the sub-array to individual block parameters, eg. &lt;code class=&quot;highlighter-rouge&quot;&gt;food&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;amount&lt;/code&gt;. If only one parameter is specified, it will contain an array with two elements.&lt;/p&gt;
+
+&lt;h3 id=&quot;but-wait-theres-more&quot;&gt;But Wait, There’s More!&lt;/h3&gt;
+
+&lt;p&gt;Check out the plethora of other &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; methods in Ruby’s &lt;a href=&quot;https://ruby-doc.org/core-3.0.1/Enumerable.html&quot;&gt;official documentation&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;custom-enumerators&quot;&gt;Custom Enumerators&lt;/h3&gt;
+
+&lt;p&gt;We’ve seen a few examples of &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt;’s awesomeness so far, but in my opinion its real power can only be truly experienced in combination with custom enumerators.&lt;/p&gt;
+
+&lt;p&gt;Let’s say you’re writing a client that communicates with a search API. The API returns search results in pages (i.e. batches) of 50.&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SearchClient&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;search_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;keywords&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;page: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;response&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http_get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/search'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;keywords: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;keywords&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;page: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;response&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;http_get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;To fetch all the search results, the caller makes multiple calls to the &lt;code class=&quot;highlighter-rouge&quot;&gt;#search_for&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;SearchClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;page&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+
+&lt;span class=&quot;kp&quot;&gt;loop&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;search_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'avocado'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;page: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;empty?&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# do something with search result&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;page&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;This approach works great, but forces the caller to understand how the API works. Specifically it requires the caller to know that results are paginated and that an empty result set indicates all results have been retrieved.&lt;/p&gt;
+
+&lt;p&gt;Let’s move the pagination logic into a separate class.&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SearchClient&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;search_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;keywords&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;SearchResultSet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keywords&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;http_get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;**&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;SearchResultSet&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;attr_reader&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:keywords&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keywords&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@keywords&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;keywords&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;page&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+
+    &lt;span class=&quot;kp&quot;&gt;loop&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;http_get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'/search'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;keywords: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;keywords&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;page: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;page&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;break&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;empty?&lt;/span&gt;
+
+      &lt;span class=&quot;no&quot;&gt;JSON&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;parse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;yield&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+      &lt;span class=&quot;n&quot;&gt;page&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Notice how our &lt;code class=&quot;highlighter-rouge&quot;&gt;SearchResultSet&lt;/code&gt; class transparently encapsulates the API’s pagination behavior. The caller no longer has to know how the API works. Instead, callers simply fetch results and iterate over them using a mechanism they’re already familar with - &lt;code class=&quot;highlighter-rouge&quot;&gt;#each&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here’s an example.&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;SearchClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;search_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'avocados'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'id'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# or whatever&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;mixing-in-enumerable&quot;&gt;Mixing in &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Remember when I said a bunch of Ruby’s core classes like &lt;code class=&quot;highlighter-rouge&quot;&gt;Array&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;Hash&lt;/code&gt; include &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt;? I meant that they quite literally &lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt; the &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; module.&lt;/p&gt;
+
+&lt;p&gt;And because &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; is just a regular ‘ol Ruby module, &lt;strong&gt;&lt;em&gt;you can include it too&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;In fact, &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; was &lt;em&gt;designed&lt;/em&gt; to be mixed into (i.e. &lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;d) into any Ruby class. The only requirement is that the class defines an &lt;code class=&quot;highlighter-rouge&quot;&gt;#each&lt;/code&gt; method.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;That’s because every other &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; method is implemented in terms of &lt;code class=&quot;highlighter-rouge&quot;&gt;#each&lt;/code&gt;&lt;/em&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Yes, that’s right. Simply defining an &lt;code class=&quot;highlighter-rouge&quot;&gt;#each&lt;/code&gt; method and &lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;ing the &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; module into your class gives you all the power of &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; &lt;strong&gt;FOR FREE&lt;/strong&gt;. In other words, you get &lt;code class=&quot;highlighter-rouge&quot;&gt;#map&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;#each_slice&lt;/code&gt;, and all the other &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; methods without having to lift a finger.&lt;/p&gt;
+
+&lt;p&gt;Let’s &lt;code class=&quot;highlighter-rouge&quot;&gt;include Enumerable&lt;/code&gt; into our &lt;code class=&quot;highlighter-rouge&quot;&gt;SearchResultSet&lt;/code&gt; class. With that very minimal effort, this is now possible:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;client&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;SearchClient&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;client&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;search_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'avocados'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ids&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'id'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Notice that we didn’t define &lt;code class=&quot;highlighter-rouge&quot;&gt;#map&lt;/code&gt; on &lt;code class=&quot;highlighter-rouge&quot;&gt;SearchResultSet&lt;/code&gt; directly - it came from &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt;. By the same token, &lt;code class=&quot;highlighter-rouge&quot;&gt;#each_slice&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;#each_cons&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;#inject&lt;/code&gt;, and many, many other useful methods are now available too. What’s more, they all Just Work. Not bad for a few lines of code.&lt;/p&gt;
+
+&lt;h3 id=&quot;the-case-of-the-missing-block&quot;&gt;The Case of the Missing Block&lt;/h3&gt;
+
+&lt;p&gt;There’s one last thing I’d like to talk about before wrapping up, and that’s lazy enumerators.&lt;/p&gt;
+
+&lt;p&gt;What happens if we call &lt;code class=&quot;highlighter-rouge&quot;&gt;SearchResultSet#each&lt;/code&gt; without a block?&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; LocalJumpError: yield called out of block&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Hmm, that’s weird. I don’t get an error if I try the same thing on an array:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;].&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; #&amp;lt;Enumerator: [5, 3, 8]:each&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;In Ruby, the &lt;code class=&quot;highlighter-rouge&quot;&gt;yield&lt;/code&gt; keyword doesn’t check to make sure the caller passed a block. We can therefore avoid the &lt;code class=&quot;highlighter-rouge&quot;&gt;LocalJumpError&lt;/code&gt; by checking for the block, and bailing out if one wasn’t passed.&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;block_given?&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;page&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Ok, let’s try that again:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; nil&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Not quite what we wanted, but at least there’s no error. We need to figure out how to return the same kind of &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerator&lt;/code&gt; object we got when calling a blockless &lt;code class=&quot;highlighter-rouge&quot;&gt;#each&lt;/code&gt; on an array.&lt;/p&gt;
+
+&lt;h3 id=&quot;kernelto_enum&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Kernel#to_enum&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;Fortunately, there’s an easy way to convert any function into an &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerator&lt;/code&gt; - Ruby’s &lt;code class=&quot;highlighter-rouge&quot;&gt;Kernel#to_enum&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;to_enum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:each&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;block_given?&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;page&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+  &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Now, calling &lt;code class=&quot;highlighter-rouge&quot;&gt;SearchResultSet#each&lt;/code&gt; without a block will return an &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerator&lt;/code&gt; object.&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# =&amp;gt; #&amp;lt;Enumerator: #&amp;lt;SearchResultSet:0x00007fa715aaee70 @client=#&amp;lt;SearchClient:0x00007fa715aaeec0&amp;gt;, @keywords=&quot;avocado&quot;&amp;gt;:each&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;chaining-enumerators&quot;&gt;Chaining Enumerators&lt;/h3&gt;
+
+&lt;p&gt;Ok, so why do this? While not particularly important for the &lt;code class=&quot;highlighter-rouge&quot;&gt;#each&lt;/code&gt; method, returning an &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerator&lt;/code&gt; when called without a block is the way all the other &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; methods work. I think it’s a good idea to be consistent.&lt;/p&gt;
+
+&lt;p&gt;Another less important reason is to enable chaining. &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerator&lt;/code&gt;s respond to all the methods in &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt;, meaning things like this are possible:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;enum&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;enum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;with_index&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;idx&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# result is the search result, and idx is a counter automatically&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# incremented on each iteration&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h3&gt;
+
+&lt;p&gt;Enumerators and the &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; module are my all-time favorite Ruby features. They are what got me hooked on Ruby when I first started using it back in 2011. No other language I’ve used has been able to match the same level of expressiveness and flexibility.&lt;/p&gt;
+
+&lt;p&gt;I hope this post inspires you to use &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; in new and interesting ways!&lt;/p&gt;</content><author><name></name></author><summary type="html">This post was originally written in 2014 at the beginning of my tenure at Lumos Labs. At the time, I was a member of the Learning Team, an “extracurricular” group that met bi-weekly to discuss cool things we were learning about technology. We organized tech meetups in our office space, streamed live Google IO talks over the projector during lunch, and sent out a digest email to our colleagues every two weeks with links to various learning resources. I ended up writing a few longer-form articles for these email blasts. What follows is an embellished version of one of those articles.</summary></entry><entry><title type="html">Encapsulation is a Lie</title><link href="/2021/05/28/encapsulation-is-a-lie/" rel="alternate" type="text/html" title="Encapsulation is a Lie" /><published>2021-05-28T12:03:30-07:00</published><updated>2021-05-28T12:03:30-07:00</updated><id>/2021/05/28/encapsulation-is-a-lie</id><content type="html" xml:base="/2021/05/28/encapsulation-is-a-lie/">&lt;p&gt;In this post I respond to another of Jason Swett’s recent articles, &lt;a href=&quot;https://www.codewithjason.com/dont-wrap-instance-variables-attr_reader-unless-necessary/&quot;&gt;Don’t wrap instance variables in attr_reader unless necessary&lt;/a&gt;. Jason, if you’re reading this please know this blog isn’t only about critiquing your writing, which I find insightful and thought-provoking. You’ve really gotten me thinking lately, and I’ve been meaning to start a blog for a long time anyway. Seemed like a good opportunity to finally get one going.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Published on May 28th, 2021&lt;/strong&gt;&lt;/p&gt;
 
