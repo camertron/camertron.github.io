@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Installing 220 Gems in 40 Seconds | Camertron&#39;s Blog</title>
+
+<meta name="description" content="My thoughts on programming, mostly using Ruby and Rails." />
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Camertron's Blog" />
+<link rel="stylesheet" href="/_bridgetown/static/css/main.3b31937342ab74462d68.css" />
+<script src="/_bridgetown/static/js/main.3d6f7e53a82bf8c3de0c.js" defer></script>
+
+  </head>
+  <body class="post ">
+    <nav class="navbar is-dark">
+  <div class="navbar-brand">
+    
+    <a class="navbar-item" href="/">
+      Camertron's Blog
+    </a>
+  
+    <div class="navbar-burger burger" data-target="top-navbar" onclick="this.classList.toggle('is-active');document.querySelector('#top-navbar').classList.toggle('is-active')">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <div id="top-navbar" class="navbar-menu">
+    <div class="navbar-start">
+      
+    <a class="navbar-item" href="/">Home</a>
+    <a class="navbar-item" href="/posts">Articles</a>
+    
+  
+    </div>
+
+    <div class="navbar-end">
+      
+    <div class="navbar-item search-item">
+      <bridgetown-search-form>
+  <input slot="input" type="search" class="input" placeholder="Search" />
+  <bridgetown-search-results theme=""></bridgetown-search-results>
+</bridgetown-search-form>
+
+    </div>
+    <a class="navbar-item is-hidden-desktop-only" href="https://twitter.com/camertron" target="_blank">
+      <span class="icon"><i class="fa fa-twitter is-size-6"></i></span>
+      <span class="is-hidden-tablet">Twitter</span>
+    </a>
+        
+    </div>
+  </div>
+</nav>
+
+
+    <main>
+      <article class="h-entry">
+  <header class="hero is-dark is-medium is-bold has-text-centered">
+  <div>
+    <div class="hero-body">
+      <div class="container is-fluid">
+        <h1 class="p-name title is-2 is-spaced has-text-light">
+          Installing 220 Gems in 40 Seconds
+        </h1>
+        
+      </div>
+    </div>
+  </div>
+</header>
+
+
+  <section class="section">
+    <div class="container">
+
+      <div class="content e-content">
+        <p>I gave a <a href="https://youtu.be/YMoa5JpjEtM?t=1315">lightning talk</a> at RubyConf in 2017 about a gem I was working on at the time called <a href="https://github.com/camertron/prebundler">prebundler</a>.  I recently spent a bunch of time improving it, so I thought I’d write up a post.</p>
+
+<p><strong>Published on August 14th, 2021</strong></p>
+
+<p>Back in 2017 I worked for Lumos Labs, the creators of Lumosity. We had recently transitioned from a custom Capistrano setup to Docker and Kubernetes for deploying our large Rails monolith. While we were pretty darn happy with it, the slowness of our Docker builds eventually became a major pain point. It would sometimes take over 30 minutes for CI to run, and while we used CI to run tests and a few other things as well, by far the most time-consuming part was building the Docker image. I decided to investigate.</p>
+
+<p>Right off the bat, I identified two major sources of slowness:</p>
+
+<ol>
+  <li>Building static assets.</li>
+  <li>Running <code class="highlighter-rouge">bundle install</code>.</li>
+</ol>
+
+<p>I’m going to focus on the second bullet point in this blog post.</p>
+
+<h2 id="docker-vs-capistrano">Docker vs Capistrano</h2>
+
+<p>In our Capistrano setup, installing gem dependencies was really fast, so we didn’t have to worry about it. That’s because Capistrano works by running commands on a remote machine over SSH. Every time you deploy, Capistrano runs <code class="highlighter-rouge">bundle install</code> for you. Most of the gems you need are already present on the machine from the previous deploy, so Bundler only has to fetch and install any new or upgraded ones.</p>
+
+<p>In contrast, Docker images are built from scratch every time. In other words, Bundler has to fetch and install every gem every time you build a new container image. Depending on how many gems your app needs to run, this can take really long time. Considering that dependencies can themselves depend on other gems and so on, your app probably depends on a lot more than just what’s listed in your Gemfile. Furthermore, many popular gems contain native extensions - usually written in C - that need to be compiled during the installation process. Compilation time can add a significant amount of additional overhead.</p>
+
+<h2 id="time-lost">Time Lost</h2>
+
+<p>In April of 2017, the repo for lumosity.com (lumos_rails) contained 445 gem dependencies. That included both entries in the Gemfile and so-called transient dependencies, i.e. gems depended upon by other gems. It took our Travis CI builder job over six minutes to install them all inside the container image.</p>
+
+<p>Six minutes might not <em>seem</em> like a lot of time, but compounded over a month, a week, or even a single day, those 6 minutes add up quickly. Our team ran about 30 builds per day which translated into spending 3 hours a day, 15 hours a week, 60 hours a month just waiting for <code class="highlighter-rouge">bundle install</code>.</p>
+
+<h2 id="bundler-improvements">Bundler Improvements</h2>
+
+<p>In the not so distant past, Bundler introduced some nice new features for speeding up installation. For example there’s the handy <code class="highlighter-rouge">--jobs n</code> flag, which will install gems in parallel using <code class="highlighter-rouge">n</code>  threads. However only the I/O bound parts of installation are affected, since Ruby’s global VM lock (GVL) prevents multiple Ruby execution paths from running concurrently. Moreover, building native extensions is still a problem.</p>
+
+<p>What more can we do to speed things up?</p>
+
+<h2 id="enter-prebundler">Enter Prebundler</h2>
+
+<p>Back in 2017 I started thinking about ways to address the native extensions problem. It seemed like a waste of time to recompile extensions for every Docker build, especially considering the resulting .so files can be cached. Caching would have to be done outside of Docker though, since Docker only caches entire layers (i.e. the full result of a <code class="highlighter-rouge">bundle install</code>) and not individual gems.</p>
+
+<p>After some noodling, I came up with an idea: why don’t we stick all the gem’s files (including compiled native extensions, etc) into a TAR file and store it in some object storage system like S3? Installation would then be as simple as downloading the TAR file and expanding it onto the hard disk somewhere. All these operations are I/O bound, meaning the installation process can be highly parallelized.</p>
+
+<p>I coded up a solution and integrated it into lumos_rails. Our team saw <code class="highlighter-rouge">bundle install</code> time decrease from 6 minutes 7 seconds to 43 seconds - that’s an 88% speed up!</p>
+
+<h2 id="prebundling-discourse">Prebundling Discourse</h2>
+
+<p>To demonstrate the sort of speed-ups prebundler can enable, let’s take a look at the Gemfile from Discourse, a large, open-source Rails app.</p>
+
+<p>By the way, all the code for this example can be found in the <a href="https://github.com/camertron/prebundler_bench">prebundler_bench repo</a>.</p>
+
+<p>At the time of this writing, Discourse has 220 direct and transient dependencies. Here’s a Dockerfile that installs all the gems from Discourse’s Gemfile without prebundler:</p>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="s"> ruby:2.7</span>
+<span class="k">WORKDIR</span><span class="s"> /usr/src/app</span>
+<span class="k">COPY</span><span class="s"> Gemfile* ./</span>
+<span class="k">RUN </span>bundle <span class="nb">install</span> <span class="nt">--jobs</span> <span class="si">$(</span><span class="nb">nproc</span><span class="si">)</span>
+</code></pre></div></div>
+
+<p>Now, here’s a Dockerfile that uses prebundler instead:</p>
+
+<div class="language-dockerfile highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">FROM</span><span class="s"> ruby:2.7</span>
+<span class="k">ARG</span><span class="s"> PREBUNDLER_ACCESS_KEY</span>
+<span class="k">ARG</span><span class="s"> PREBUNDLER_ACCESS_SECRET</span>
+<span class="k">WORKDIR</span><span class="s"> /usr/src/app</span>
+<span class="k">RUN </span>gem <span class="nb">install </span>prebundler
+<span class="k">COPY</span><span class="s"> Gemfile* ./</span>
+<span class="k">COPY</span><span class="s"> .prebundle_config ./</span>
+<span class="k">RUN </span>prebundle <span class="nb">install</span> <span class="nt">--jobs</span> <span class="si">$(</span><span class="nb">nproc</span><span class="si">)</span>
+</code></pre></div></div>
+
+<p>Finally, here’s the contents of the .prebundle_config file:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Prebundler</span><span class="p">.</span><span class="nf">configure</span> <span class="k">do</span> <span class="o">|</span><span class="n">config</span><span class="o">|</span>
+  <span class="n">config</span><span class="p">.</span><span class="nf">storage_backend</span> <span class="o">=</span> <span class="no">Prebundler</span><span class="o">::</span><span class="no">S3Backend</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
+    <span class="ss">client: </span><span class="no">Aws</span><span class="o">::</span><span class="no">S3</span><span class="o">::</span><span class="no">Client</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
+      <span class="ss">region: </span><span class="s1">'default'</span><span class="p">,</span>
+      <span class="ss">credentials: </span><span class="no">Aws</span><span class="o">::</span><span class="no">Credentials</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span>
+        <span class="no">ENV</span><span class="p">[</span><span class="s1">'PREBUNDLER_ACCESS_KEY'</span><span class="p">],</span>
+        <span class="no">ENV</span><span class="p">[</span><span class="s1">'PREBUNDLER_ACCESS_SECRET'</span><span class="p">]</span>
+      <span class="p">),</span>
+      <span class="ss">endpoint: </span><span class="s1">'https://us-east-1.linodeobjects.com'</span><span class="p">,</span>
+      <span class="ss">http_continue_timeout: </span><span class="mi">0</span>
+    <span class="p">),</span>
+    <span class="ss">bucket: </span><span class="s1">'prebundler'</span><span class="p">,</span>
+    <span class="ss">region: </span><span class="s1">'us-east-1'</span>
+  <span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>We can now build the images like so:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># regular installation using bundler</span>
+docker build <span class="se">\</span>
+    <span class="nt">--no-cache</span> <span class="se">\</span>
+    <span class="nt">-f</span> Dockerfile <span class="se">\</span>
+    <span class="nt">-t</span> prebundler_test:latest <span class="nb">.</span>
+
+<span class="c"># faster installation using prebundler</span>
+docker build <span class="se">\</span>
+    <span class="nt">--no-cache</span> <span class="se">\</span>
+    <span class="nt">--build-arg</span> <span class="nv">PREBUNDLER_ACCESS_KEY</span><span class="o">=</span><span class="k">${</span><span class="nv">PREBUNDLER_ACCESS_KEY</span><span class="k">}</span> <span class="se">\</span>
+    <span class="nt">--build-arg</span> <span class="nv">PREBUNDLER_ACCESS_SECRET</span><span class="o">=</span><span class="k">${</span><span class="nv">PREBUNDLER_ACCESS_SECRET</span><span class="k">}</span> <span class="se">\</span>
+    <span class="nt">-f</span> Dockerfile-pre <span class="se">\</span>
+    <span class="nt">-t</span> prebundler_test:pre-latest <span class="nb">.</span>
+
+</code></pre></div></div>
+
+<p><strong>NOTE</strong>: don’t forget to populate <code class="highlighter-rouge">PREBUNDLER_ACCESS_KEY</code> and <code class="highlighter-rouge">PREBUNDLER_ACCESS_SECRET</code> with the contents of your S3 credentials when you run the script.</p>
+
+<h2 id="the-results">The Results</h2>
+
+<p>Building both images on my MacBook Pro produces the following output. The <code class="highlighter-rouge">docker build</code> command now helpfully times every operation, so we can see how long <code class="highlighter-rouge">bundle install</code> took vs <code class="highlighter-rouge">prebundle install</code>.</p>
+
+<p>Here’s the output for regular installation using bundler:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[+] Building 185.7s (9/9) FINISHED
+ =&gt; [internal] load build definition from Dockerfile   0.0s
+ =&gt; =&gt; transferring dockerfile: 129B                   0.0s
+ =&gt; [internal] load .dockerignore                      0.0s
+ =&gt; =&gt; transferring context: 2B                        0.0s
+ =&gt; [internal] load metadata for ruby:2.7              1.2s
+ =&gt; [internal] load build context                      0.0s
+ =&gt; =&gt; transferring context: 14.29kB                   0.0s
+ =&gt; [1/4] FROM docker.io/library/ruby:2.7              0.0s
+ =&gt; CACHED [2/4] WORKDIR /usr/src/app                  0.0s
+ =&gt; [3/4] COPY Gemfile* ./                             0.0s
+ =&gt; [4/4] RUN bundle install --jobs $(nproc)         179.2s
+ =&gt; exporting to image                                 5.2s
+ =&gt; =&gt; exporting layers                                5.2s
+ =&gt; =&gt; writing image                                   0.0s
+ =&gt; =&gt; naming to prebundler_test:latest                0.0s
+</code></pre></div></div>
+
+<p>And here’s the output for installation using prebundler:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[+] Building 48.3s (11/11) FINISHED
+ =&gt; [internal] load build definition from Dockerfile   0.0s
+ =&gt; =&gt; transferring dockerfile: 191B                   0.0s
+ =&gt; [internal] load .dockerignore                      0.0s
+ =&gt; =&gt; transferring context: 2B                        0.0s
+ =&gt; [internal] load metadata for ruby:2.7              0.5s
+ =&gt; [internal] load build context                      0.0s
+ =&gt; =&gt; transferring context: 533B                      0.0s
+ =&gt; [1/6] FROM docker.io/library/ruby:2.7              0.0s
+ =&gt; CACHED [2/6] WORKDIR /usr/src/app                  0.0s
+ =&gt; [3/6] RUN gem install prebundler                   3.3s
+ =&gt; [4/6] COPY Gemfile* ./                             0.0s
+ =&gt; [5/6] COPY .prebundle_config ./                    0.0s
+ =&gt; [6/6] RUN prebundle install --jobs $(nproc)       39.9s
+ =&gt; exporting to image                                 4.4s
+ =&gt; =&gt; exporting layers                                4.4s
+ =&gt; =&gt; writing image                                   0.0s
+ =&gt; =&gt; naming to prebundler_test:pre-latest            0.0s
+</code></pre></div></div>
+
+<p>As you can see, bundler took 179.2 seconds while prebundler took only 39.9. That’s a 78% speed increase! Note that because we had to install the prebundler gem in a separate build step, the overall speed increase is actually closer to 74%. Pretty good, I’d say!</p>
+
+<h2 id="setting-up-prebundler-in-your-app">Setting up Prebundler in your App</h2>
+
+<p>As you may have noticed, I used Linode’s object storage offering in the Discourse example above. As it happens, many of the object storage systems available from the various cloud providers are S3-compatible, requiring no changes to the example prebundler config I showed earlier.</p>
+
+<p>Let’s walk through the necessary steps one by one.</p>
+
+<ol>
+  <li>
+    <p>First, you’ll need a Linode account with object storage turned on. Linode charges a flat monthly fee under a certain storage limit. At the time of this writing, it costs $5/mo for 250gb of storage.</p>
+  </li>
+  <li>
+    <p>Create a bucket where all your TAR files will be stored. I called mine “prebundler.”</p>
+  </li>
+</ol>
+
+<p><img src="/images/220_gems/create_bucket.png" alt="" /></p>
+
+<ol>
+  <li>Create the access key prebundler will use to store and retrieve TAR files. It’s a good idea to give it only the access it needs, i.e. read and write access to the prebundler bucket only.</li>
+</ol>
+
+<p><img src="/images/220_gems/create_access_key.png" alt="" /></p>
+
+<ol>
+  <li>
+    <p>Make sure to store the access key and secret in a secure location like a password manager or other credentials store.</p>
+  </li>
+  <li>
+    <p>Install prebundler by running <code class="highlighter-rouge">gem install prebundler</code>. If you’re using a Ruby version manager like rbenv or asdf, don’t forget to run <code class="highlighter-rouge">rbenv rehash</code>  or <code class="highlighter-rouge">asdf reshim ruby</code> to make the <code class="highlighter-rouge">prebundle</code>  command available in your <code class="highlighter-rouge">PATH</code>.</p>
+  </li>
+  <li>
+    <p>Create a .prebundle_config file in the root of your project and copy/paste in the configuration given above. Make sure to change the endpoint and region if you created your bucket in a region other than us-east-1.</p>
+  </li>
+  <li>
+    <p>Add two <code class="highlighter-rouge">ARG</code>s to your Dockerfile, one each for the access key and secret key. Add a <code class="highlighter-rouge">COPY</code>  directive to copy in the .prebundle_config, and finally <code class="highlighter-rouge">RUN prebundle install</code> instead of <code class="highlighter-rouge">bundle install</code></p>
+  </li>
+  <li>
+    <p>Last but not least, build your Docker image. Don’t forget to pass two  <code class="highlighter-rouge">--build-arg</code>  arguments containing the access key and secret.</p>
+  </li>
+</ol>
+
+<p>After building the image, you should see a bunch of TAR files in your object storage bucket:</p>
+
+<p><img src="/images/220_gems/bucket.png" alt="" /></p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>If installing gem dependencies is slowing down your CI builds and blocking releases, consider giving prebundler a try. If you run into trouble, please don’t hesitate to file an issue or, better yet, submit a pull request :)</p>
+
+      </div>
+    </div>
+  </section>
+</article>
+
+    </main>
+
+    <footer class="footer">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-5">
+        <div class="logo">
+          Camertron's Blog
+        </div>
+
+        <h4>
+          My thoughts on programming, mostly with Ruby
+        </h4>
+
+        <div class="mt-3">
+          Follow on Twitter: <strong><a href="https://twitter.com/camertron">@camertron</strong></a>
+        </div>
+
+      </div>
+      <div class="column is-4">
+      </div>
+      <div class="column is-3">
+        <h4>
+          <strong>Share</strong> on Social Media
+        </h4>
+
+        <div class="mt-5">
+          <a href="https://twitter.com/intent/tweet?url=&via=camertron&text=Check%20out%20this%20awesome%20new%20site%20built%20with%20Bridgetown%20and%20Ruby%21&hashtags=SpinUpBridgetown%2CJamstack" class="button is-info">
+            <span class="icon"> <i class="fa fa-twitter is-size-5"></i> </span>
+            <span class="has-text-weight-bold">Tweet</span>
+          </a>
+        </div>
+
+        <div class="mt-6">
+          <a href="/feed.xml" class="button is-danger is-small">
+            <span class="icon"> <i class="fa fa-rss"></i> </span>
+            <span class="has-text-weight-bold">News Feed</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  </body>
+</html>
