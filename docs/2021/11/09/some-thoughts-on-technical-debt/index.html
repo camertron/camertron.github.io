@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Some Thoughts on Technical Debt | Camertron&#39;s Blog</title>
+
+<meta name="description" content="My thoughts on programming, mostly using Ruby and Rails." />
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Camertron's Blog" />
+<link rel="stylesheet" href="/_bridgetown/static/css/main.3b31937342ab74462d68.css" />
+<script src="/_bridgetown/static/js/main.3d6f7e53a82bf8c3de0c.js" defer></script>
+
+  </head>
+  <body class="post ">
+    <nav class="navbar is-dark">
+  <div class="navbar-brand">
+    
+    <a class="navbar-item" href="/">
+      Camertron's Blog
+    </a>
+  
+    <div class="navbar-burger burger" data-target="top-navbar" onclick="this.classList.toggle('is-active');document.querySelector('#top-navbar').classList.toggle('is-active')">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <div id="top-navbar" class="navbar-menu">
+    <div class="navbar-start">
+      
+    <a class="navbar-item" href="/">Home</a>
+    <a class="navbar-item" href="/posts">Articles</a>
+    
+  
+    </div>
+
+    <div class="navbar-end">
+      
+    <div class="navbar-item search-item">
+      <bridgetown-search-form>
+  <input slot="input" type="search" class="input" placeholder="Search" />
+  <bridgetown-search-results theme=""></bridgetown-search-results>
+</bridgetown-search-form>
+
+    </div>
+    <a class="navbar-item is-hidden-desktop-only" href="https://twitter.com/camertron" target="_blank">
+      <span class="icon"><i class="fa fa-twitter is-size-6"></i></span>
+      <span class="is-hidden-tablet">Twitter</span>
+    </a>
+        
+    </div>
+  </div>
+</nav>
+
+
+    <main>
+      <article class="h-entry">
+  <header class="hero is-dark is-medium is-bold has-text-centered">
+  <div>
+    <div class="hero-body">
+      <div class="container is-fluid">
+        <h1 class="p-name title is-2 is-spaced has-text-light">
+          Some Thoughts on Technical Debt
+        </h1>
+        
+      </div>
+    </div>
+  </div>
+</header>
+
+
+  <section class="section">
+    <div class="container">
+
+      <div class="content e-content">
+        <p>My thoughts on a <a href="https://www.redhat.com/en/compiler-podcast/what-is-technical-debt">“recent episode of the Compiler podcast”</a> entitled “Do We Want a World Without Technical Debt?”</p>
+
+<p><strong>Published on November 9th, 2021</strong></p>
+
+<p>I’m a big fan of pretty much everything Saron Yitbarek does, and recently one of those things has been the excellent <a href="https://www.redhat.com/en/command-line-heroes">Command Line Heroes</a> podcast. The most recent show was actually promoting another podcast called Compiler, specifically their fourth episode entitled <a href="https://www.redhat.com/en/compiler-podcast/what-is-technical-debt">“Do We Want a World Without Technical Debt?”</a>.</p>
+
+<p>This was a really thought-provoking episode. I found myself trying to add my opinion out loud while on my daily walk with my daughter. Considering she’s only two and couldn’t hear the audio, the conversation was fairly one-sided. Fortunately at the end of the episode, hosts Angela Andrews and Brent Simoneaux ask their audience to weigh in. This post is an attempt to write down my thoughts.</p>
+
+<h2 id="what-is-technical-debt">What is Technical Debt?</h2>
+<p>In my experience, technical debt is the cost of choosing a faster, easier, or partially complete solution over a more thoughtful, time-consuming, or correct one. Most of the time these decisions are made because of time constraints. “We need this feature yesterday!”</p>
+
+<p>Anyone who’s worked for a few years in the software industry has likely encountered these opposing forces of time and correctness. Given infinite time, theoretically a software development team could produce a completely correct and consistent system. The problem of course is that infinite time - or even sufficient time - is often not available. In these situations, software development teams frequently choose to incur technical debt, producing a system that works /well enough/ for the given set of requirements. The idea is that, at some future time, they’ll revisit the problem and implement a more robust solution.</p>
+
+<p>Sounds like a fair tradeoff, right?</p>
+
+<h2 id="when-tech-debt-accumulates">When Tech Debt Accumulates</h2>
+<p>Unfortunately in my experience, paying down tech debt only rarely happens in practice. It’s not difficult to understand why. Many teams find it challenging to justify revisiting a feature that’s already working for customers. In addition, software development teams are always under pressure to fix bugs and ship new features, which means they often prioritize those things over less glamorous tasks like reducing debt.</p>
+
+<p>As you might imagine, ignoring tech debt and over again can lead to a large accumulation of it. Software is built on other software, meaning that hastily written code not only adds tech debt of its own but has the potential to affect any of the code written on top of it as well. Even in small systems, failure to address tech debt in a timely manner can gradually and perniciously slow down development, leaving the team with increasingly less capacity even though the size of the team itself hasn’t changed.</p>
+
+<h2 id="so-is-debt-bad-then">So is Debt Bad Then?</h2>
+<p>I realize I just made tech debt sound like a bad thing.</p>
+
+<p>As you might have noticed, conversations about debt - tech debt included - are usually framed in the negative as if debt is this horrible thing we should avoid. The truth is, debt is an extremely important and useful tool. Let’s examine how it works in its native environment: the financial world.</p>
+
+<p>The general public is probably most familiar with the sort of debt that comes with using a credit card or buying a house or car. It’s probably not a stretch to say that most people don’t have $25k lying around at any given point to drop on a car. Instead, they finance the purchase by getting an auto loan. They make monthly payments on that loan until the lender has received back the full amount. In this scenario, everybody wins. The lender makes money by charging interest, and the buyer gets to drive away in a new car even though they can’t afford the full purchase price up front. Such a transaction would have been impossible without debt.</p>
+
+<p>Financial institutions, governments, and businesses use debt all the time. The US government for example issues bonds, which are sort of “reverse” loans where individual people loan money to the government. Venture capital firms loan money to start-ups they hope will take off and make them large returns. You can even see debt at work between whole countries.</p>
+
+<p>-The thing is, debt isn’t just an amount of money you owe to another person or institution - it also establishes your credibility. Banks, companies, etc are more likely to lend to you if you’ve already shown you’re a trustworthy borrower. Missing or late payments, default, etc can damage your reputation.-</p>
+
+<h2 id="tech-debt-through-the-financial-lens">Tech Debt Through the Financial Lens</h2>
+<p>For whatever reason, I haven’t heard very many programmers talk about why  “technical debt” contains the word “debt.” It’s a curious choice of words, but really very appropriate.</p>
+
+<p>Imagine for a minute that every decision you make as a programmer is a financial transaction. Our currency is time. Decisions that don’t require trading large amounts of time for correctness are simple, direct transactions. Decisions in which you sacrifice correctness in the interest of time are /loans/. The loan represents time borrowed from the bank - time you promise to repay later. At the risk of stretching the metaphor a little too far, we might even say the bank collects interest since it always takes more time to dive back into code you wrote a while ago.</p>
+
+<p>Again, everybody wins. With their borrowed time the team can deliver systems and features faster. The bank will eventually get its time back plus interest.</p>
+
+<p>I like this parallel to the financial world because it makes it more obvious why it’s dangerous to ignore tech debt. Taking on too much financial debt can lead to monthly payments you can’t afford. Miss too many payments, and the bank will repossess (take back) your car. Taking on too much tech debt can have a similar effect. Instead of working on a new feature, you might be forced to spend all your available time dealing with flaky test suites, awkward database relationships, and production emergencies.</p>
+
+<p>If tech debt can cause such headaches, let’s ask the obvious next question: is it possible to get rid of it entirely?</p>
+
+<h2 id="tech-debt-is-unavoidable">Tech Debt is Unavoidable</h2>
+<p>Unfortunately, no.</p>
+
+<p>The most successful teams I’ve seen that manage their tech debt effectively do so by including it in their planning. They track it in their software management system and discuss how much time should be allocated to reducing it every sprint. Sometimes, an entire sprint is dedicated to refactoring a certain part of the code to make it easier to implement a new feature the /following/ sprint.</p>
+
+<p>However, tech debt accumulates even in systems nobody’s working on.</p>
+
+<p>If you’ve ever tried to dust off and boot up an old app, you’ve likely run into the phenomenon of /bitrot/. Code (almost literally) /rots/ as it ages. Bitrot happens because our apps are made up of so much more than just our own code. They depend on a bunch of other software packages, build tooling, CI pipelines, 3rd-party APIs, and external systems. A software package that built successfully on your laptop with Clang 3.5 in 2014 now dumps out a whole mess of compiler warnings and an esoteric error message. The version of the 3rd party API your app relies on was deprecated in 2015 and removed in 2016. The latest version of MySQL no longer supports a specific type of column your app relies on. The list goes on and on.</p>
+
+<p>While it’s true that, in actively maintained systems bitrot is less likely, such systems are still susceptible to forces outside of your control. The canonical example is probably upgrading to the next version of your app’s web framework. You want all the new features, bug fixes, and security patches in the new version, but the upgrade isn’t going to happen without a serious investment of time and effort. In my experience these upgrades can sometimes take years to pull off.</p>
+
+<p>New framework or library versions are an example of passive tech debt. Similar to bitrot, passive debt accumulates by no fault of your own. New versions signal that the framework and community are moving on without you. In fact, there will always be new versions of this lib or that, new technologies and new approaches for solving problems. Unless you’re upgrading on a regular schedule, this sort of issue can become a real thorn in your side. For example, it can be hard to attract talent to work with outdated technologies and tech stacks. Older libraries often don’t receive security patches either, meaning you’ll be on the hook for fixing them if vulnerabilities are found.</p>
+
+<h2 id="embracing-tech-debt">Embracing Tech Debt</h2>
+<p>It’s not all bad news though. Tech debt might be unavoidable, but that doesn’t mean it can’t be effectively managed. In fact, I would argue that any team making good progress on a software project must be taking on debt.</p>
+
+<p>That’s because software is almost never written correctly the first time around. It often takes a number of refactorings, real-world usages, and mental model shifts before a piece of software settles into its final shape. Considering this, there’s no reason to spend time worrying about the correctness of your code, at least at first. It’s going to change, perhaps drastically, during the next iteration anyway. Rather than spending lots of precious time worrying about code correctness, focus on getting something out the door.</p>
+
+<p>Frame the tech debt conversation in terms of the inevitability of bad code. In my opinion, there’s no such thing as “bad” code running in production anyway. If it’s making you money, it probably isn’t bad. With that mindset, debt becomes the sort of tool it is in the financial sector. Let it free you from worrying about writing flawless code, and from the negative connotations associated with the word “debt.”</p>
+
+<p>Happy hacking :)</p>
+
+      </div>
+    </div>
+  </section>
+</article>
+
+    </main>
+
+    <footer class="footer">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-5">
+        <div class="logo">
+          Camertron's Blog
+        </div>
+
+        <h4>
+          My thoughts on programming, mostly with Ruby
+        </h4>
+
+        <div class="mt-3">
+          Follow on Twitter: <strong><a href="https://twitter.com/camertron">@camertron</strong></a>
+        </div>
+
+      </div>
+      <div class="column is-4">
+      </div>
+      <div class="column is-3">
+        <h4>
+          <strong>Share</strong> on Social Media
+        </h4>
+
+        <div class="mt-5">
+          <a href="https://twitter.com/intent/tweet?url=&via=camertron&text=Check%20out%20this%20awesome%20new%20site%20built%20with%20Bridgetown%20and%20Ruby%21&hashtags=SpinUpBridgetown%2CJamstack" class="button is-info">
+            <span class="icon"> <i class="fa fa-twitter is-size-5"></i> </span>
+            <span class="has-text-weight-bold">Tweet</span>
+          </a>
+        </div>
+
+        <div class="mt-6">
+          <a href="/feed.xml" class="button is-danger is-small">
+            <span class="icon"> <i class="fa fa-rss"></i> </span>
+            <span class="has-text-weight-bold">News Feed</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  </body>
+</html>
