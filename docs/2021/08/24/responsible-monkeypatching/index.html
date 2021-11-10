@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>Responsible Monkeypatching | Camertron&#39;s Blog</title>
+
+<meta name="description" content="My thoughts on programming, mostly using Ruby and Rails." />
+<link type="application/atom+xml" rel="alternate" href="/feed.xml" title="Camertron's Blog" />
+<link rel="stylesheet" href="/_bridgetown/static/css/main.3b31937342ab74462d68.css" />
+<script src="/_bridgetown/static/js/main.3d6f7e53a82bf8c3de0c.js" defer></script>
+
+  </head>
+  <body class="post ">
+    <nav class="navbar is-dark">
+  <div class="navbar-brand">
+    
+    <a class="navbar-item" href="/">
+      Camertron's Blog
+    </a>
+  
+    <div class="navbar-burger burger" data-target="top-navbar" onclick="this.classList.toggle('is-active');document.querySelector('#top-navbar').classList.toggle('is-active')">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+
+  <div id="top-navbar" class="navbar-menu">
+    <div class="navbar-start">
+      
+    <a class="navbar-item" href="/">Home</a>
+    <a class="navbar-item" href="/posts">Articles</a>
+    
+  
+    </div>
+
+    <div class="navbar-end">
+      
+    <div class="navbar-item search-item">
+      <bridgetown-search-form>
+  <input slot="input" type="search" class="input" placeholder="Search" />
+  <bridgetown-search-results theme=""></bridgetown-search-results>
+</bridgetown-search-form>
+
+    </div>
+    <a class="navbar-item is-hidden-desktop-only" href="https://twitter.com/camertron" target="_blank">
+      <span class="icon"><i class="fa fa-twitter is-size-6"></i></span>
+      <span class="is-hidden-tablet">Twitter</span>
+    </a>
+        
+    </div>
+  </div>
+</nav>
+
+
+    <main>
+      <article class="h-entry">
+  <header class="hero is-dark is-medium is-bold has-text-centered">
+  <div>
+    <div class="hero-body">
+      <div class="container is-fluid">
+        <h1 class="p-name title is-2 is-spaced has-text-light">
+          Responsible Monkeypatching
+        </h1>
+        
+      </div>
+    </div>
+  </div>
+</header>
+
+
+  <section class="section">
+    <div class="container">
+        <div class="mb-6 author has-text-centered p-author">
+          <img src="https://avatars.githubusercontent.com/u/575280" alt="Cameron Dutro" class="avatar u-photo" />
+          by <a href="/authors/cameron/" class="has-text-weight-bold u-url p-name">Cameron Dutro</a>
+          on August 24, 2021
+        </div>
+
+      <div class="content e-content">
+        <p>This is a <a href="https://blog.appsignal.com/2021/08/24/responsible-monkeypatching-in-ruby.html">post</a> I wrote for the AppSignal blog about how to monkeypatch without making a mess :)</p>
+
+<hr />
+
+<link rel="canonical" href="https://blog.appsignal.com/2021/08/24/responsible-monkeypatching-in-ruby.html" />
+
+<p>When I first started writing Ruby code professionally back in 2011, one of the things that impressed me the most about the language was its flexibility. It felt as though with Ruby, everything was possible. Compared to the rigidity of languages like C# and Java, Ruby programs almost seemed like they were <em>alive</em>.</p>
+
+<p>Consider how many incredible things you can do in a Ruby program. You can define and delete methods at will. You can call methods that don’t exist. You can conjure entire nameless classes out of thin air. It’s absolutely wild.</p>
+
+<p>But that’s not where the story ends. While you can apply these techniques inside your own code, Ruby also lets you apply them to anything loaded into the virtual machine. In other words, you can mess with other people’s code as easily as you can your own.</p>
+
+<h2 id="what-are-monkeypatches">What Are Monkeypatches?</h2>
+
+<p>Enter the <em>monkeypatch</em>.</p>
+
+<p>In short, monkeypatches “monkey with” existing code. The existing code is often code you don’t have direct access to, like code from a gem or from the Ruby standard library. Patches are usually designed to alter the original code’s behavior to fix a bug, improve performance, etc.</p>
+
+<p>The most unsophisticated monkeypatches reopen ruby classes and modify behavior by adding or overriding methods.</p>
+
+<p>This reopening idea is core to Ruby’s object model. Whereas in Java classes can only be defined once, Ruby classes (and modules for that matter) can be defined multiple times. When we define a class a second, a third, a fourth time, etc, we say that we’re <em>reopening</em> it. Any new methods we define are added to the existing class definition, and can be called on instances of that class.</p>
+
+<p>This short example illustrates the class reopening concept:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Sounds</span>
+  <span class="k">def</span> <span class="nf">honk</span>
+    <span class="s2">"Honk!"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="k">class</span> <span class="nc">Sounds</span>
+  <span class="k">def</span> <span class="nf">squeak</span>
+    <span class="s2">"Squeak!"</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">sounds</span> <span class="o">=</span> <span class="no">Sounds</span><span class="p">.</span><span class="nf">new</span>
+<span class="n">sounds</span><span class="p">.</span><span class="nf">honk</span>    <span class="c1"># =&gt; "Honk!"</span>
+<span class="n">sounds</span><span class="p">.</span><span class="nf">squeak</span>  <span class="c1"># =&gt; "Squeak!"</span>
+</code></pre></div></div>
+
+<p>Notice that both the <code class="highlighter-rouge">#honk</code> and <code class="highlighter-rouge">#squeak</code> methods are available on the <code class="highlighter-rouge">Sounds</code> class through the magic of reopening.</p>
+
+<p>Monkeypatching is essentially the act of reopening classes in 3rd-party code.</p>
+
+<h2 id="is-monkeypatching-dangerous">Is Monkeypatching Dangerous?</h2>
+
+<p>If the previous sentence scared you, that’s probably a good thing. Monkeypatching, especially when done carelessly, can cause real chaos.</p>
+
+<p>Consider for a moment what would happen if we were to redefine <code class="highlighter-rouge">Array#&lt;&lt;</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Array</span>
+  <span class="k">def</span> <span class="nf">&lt;&lt;</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="c1"># do nothing 😈</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>With these four lines of code, every single array instance in the entire program is now broken.</p>
+
+<p>What’s more, the original implementation of <code class="highlighter-rouge">#&lt;&lt;</code> is gone. Aside from restarting the Ruby process, there’s no way to get it back.</p>
+
+<h2 id="when-monkeypatching-goes-horribly-wrong">When Monkeypatching Goes Horribly Wrong</h2>
+
+<p>Back in 2011, I worked for a prominent social networking company. At the time, the codebase was a massive Rails monolith running on Ruby 1.8.7. Several hundred engineers contributed to the codebase on a daily basis, and the pace of development was very fast.</p>
+
+<p>At one point my team decided to monkeypatch <code class="highlighter-rouge">String#%</code> to make writing plurals easier for internationalization purposes. Here’s an example of what our patch could do:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">replacements</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="ss">horse_count: </span><span class="mi">3</span><span class="p">,</span>
+  <span class="ss">horses: </span><span class="p">{</span>
+    <span class="ss">one: </span><span class="s2">"is 1 horse"</span><span class="p">,</span>
+    <span class="ss">other: </span><span class="s2">"are %{horse_count} horses"</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1"># "there are 3 horses in the barn"</span>
+<span class="s2">"there %{horse_count:horses} in the barn"</span> <span class="o">%</span> <span class="n">replacements</span>
+</code></pre></div></div>
+
+<p>We wrote up the patch and eventually got it deployed into production…only to find that it didn’t work. Our users were seeing strings with literal <code class="highlighter-rouge">%{...}</code> characters instead of nicely pluralized text. It didn’t make sense. The patch had worked perfectly well in the development environment on my laptop. Why wasn’t it working in production?</p>
+
+<p>Initially, we thought we’d found a bug in Ruby itself, only to later find that a production Rails console produced a different result than a Rails console in development. Since both consoles ran on the same Ruby version, we could rule out a bug in the Ruby standard library. Something else was going on.</p>
+
+<p>After several days of head-scratching, a co-worker was able to track down a Rails initializer that added <em>another</em> implementation of <code class="highlighter-rouge">String#%</code> that none of us had seen before. To further complicate things, this earlier implementation also contained a bug, so the results we saw in the production console differed from Ruby’s official documentation.</p>
+
+<p>That’s not the end of the story though. In tracking down the earlier monkeypatch, we also found no less than three more, <em>all patching the same method.</em> We looked at each other in horror. How did this ever work??</p>
+
+<p>We eventually chalked the inconsistent behavior up to Rails’ eager loading. In development, Rails lazy loads Ruby files, i.e., only loads them when they are <code class="highlighter-rouge">require</code>d. In production, however, Rails loads all of the app’s Ruby files at initialization. This can throw a big monkey wrench into monkeypatching.</p>
+
+<h2 id="consequences-of-reopening-a-class">Consequences of Reopening a Class</h2>
+
+<p>In this case, each of the monkeypatches reopened the <code class="highlighter-rouge">String</code> class and effectively replaced the existing version of the <code class="highlighter-rouge">#%</code> method with another one. There are several major pitfalls to this approach:</p>
+
+<ol>
+  <li>The last patch applied “wins”, meaning behavior is dependent on load order.</li>
+  <li>There’s no way to access the original implementation.</li>
+  <li>Patches leave almost no audit trail, which makes them very difficult to find later.</li>
+</ol>
+
+<p>Not surprisingly, perhaps, we ran into all of these.</p>
+
+<p>At first, we didn’t even know there were other monkeypatches at play. Because of the bug in the winning method, it appeared the original implementation was broken. When we discovered the other competing patches, it was impossible to tell which won without adding copious <code class="highlighter-rouge">puts</code> statements.</p>
+
+<p>Finally, even when we did discover which method won in development, a different one would win in production. It was also programmatically difficult to tell which patch had been applied last since Ruby 1.8 didn’t have the wonderful <code class="highlighter-rouge">Method#source_location</code> method we have now.</p>
+
+<p>I spent at least a week trying to figure out what was going on, time I essentially wasted chasing an entirely avoidable problem.</p>
+
+<p>Eventually, we decided to introduce the <code class="highlighter-rouge">LocalizedString</code> wrapper class with an accompanying <code class="highlighter-rouge">#%</code> method. Our <code class="highlighter-rouge">String</code> monkeypatch then simply became this:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">String</span>
+  <span class="k">def</span> <span class="nf">localize</span>
+    <span class="no">LocalizedString</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="when-monkeypatching-fails">When Monkeypatching Fails</h2>
+
+<p>In my experience, monkeypatches often fail for one of two reasons:</p>
+
+<ol>
+  <li><strong>The patch itself is broken.</strong> In the codebase I mentioned above, not only were there several competing implementations of the same method, but the method that “won” didn’t work.</li>
+  <li><strong>Assumptions are invalid.</strong> The host code has been updated and the patch no longer applies as written.</li>
+</ol>
+
+<p>Let’s look at the second bullet point in more detail.</p>
+
+<h2 id="even-the-best-laid-plans">Even the Best-Laid Plans…</h2>
+
+<p>Monkeypatching often fails for the same reason you reached for it in the first place - because you don’t have access to the original code. For precisely that reason, the original code can change out from under you.</p>
+
+<p>Consider this example in a gem your app depends on:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Sale</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="n">discount_pct</span><span class="p">,</span> <span class="n">tax_rate</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
+    <span class="vi">@amount</span> <span class="o">=</span> <span class="n">amount</span>
+    <span class="vi">@discount_pct</span> <span class="o">=</span> <span class="n">discount_pct</span>
+    <span class="vi">@tax_rate</span> <span class="o">=</span> <span class="n">tax_rate</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">total</span>
+    <span class="n">discounted_amount</span> <span class="o">+</span> <span class="n">sales_tax</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">discounted_amount</span>
+    <span class="vi">@amount</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="vi">@discount_pct</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">sales_tax</span>
+    <span class="k">if</span> <span class="vi">@tax_rate</span>
+      <span class="n">discounted_amount</span> <span class="o">*</span> <span class="vi">@tax_rate</span>
+    <span class="k">else</span>
+      <span class="mi">0</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Wait, that’s not right. Sales tax should be applied to the full amount, not the discounted amount. You submit a pull request to the project. While you’re waiting for the maintainer to merge your PR, you add this monkeypatch to your app:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Sale</span>
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">sales_tax</span>
+    <span class="k">if</span> <span class="vi">@tax_rate</span>
+      <span class="vi">@amount</span> <span class="o">*</span> <span class="vi">@tax_rate</span>
+    <span class="k">else</span>
+      <span class="mi">0</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>It works perfectly. You check it in and forget about it.</p>
+
+<p>Everything is fine for a long time. Then one day the finance team sends you an email asking why the company hasn’t been collecting sales tax for a month.</p>
+
+<p>Confused, you start digging into the issue and eventually notice one of your co-workers recently updated the gem that contains the <code class="highlighter-rouge">Sale</code> class. Here’s the updated code:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Sale</span>
+  <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="n">amount</span><span class="p">,</span> <span class="n">discount_pct</span><span class="p">,</span> <span class="n">sales_tax_rate</span> <span class="o">=</span> <span class="kp">nil</span><span class="p">)</span>
+    <span class="vi">@amount</span> <span class="o">=</span> <span class="n">amount</span>
+    <span class="vi">@discount_pct</span> <span class="o">=</span> <span class="n">discount_pct</span>
+    <span class="vi">@sales_tax_rate</span> <span class="o">=</span> <span class="n">sales_tax_rate</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">total</span>
+    <span class="n">discounted_amount</span> <span class="o">+</span> <span class="n">sales_tax</span>
+  <span class="k">end</span>
+
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">discounted_amount</span>
+    <span class="vi">@amount</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="vi">@discount_pct</span><span class="p">)</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">sales_tax</span>
+    <span class="k">if</span> <span class="vi">@sales_tax_rate</span>
+      <span class="n">discounted_amount</span> <span class="o">*</span> <span class="vi">@sales_tax_rate</span>
+    <span class="k">else</span>
+      <span class="mi">0</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Looks like one of the project maintainers renamed the <code class="highlighter-rouge">@tax_rate</code> instance variable to <code class="highlighter-rouge">@sales_tax_rate</code>. The monkeypatch checks the value of the old <code class="highlighter-rouge">@tax_rate</code> variable, which is always <code class="highlighter-rouge">nil</code>. Nobody noticed because no errors were ever raised. The app chugged along as if nothing had happened.</p>
+
+<h2 id="why-monkeypatch">Why Monkeypatch?</h2>
+
+<p>Given these examples, it might seem like monkeypatching just isn’t worth the potential headaches. So why do we do it? In my opinion, there are three major use-cases:</p>
+
+<ol>
+  <li>To fix broken or incomplete 3rd-party code.</li>
+  <li>To quickly test a change or multiple changes in development.</li>
+  <li>To wrap existing functionality with instrumentation or annotation code.</li>
+</ol>
+
+<p>In some cases, the <em>only</em> viable way to address a bug or performance issue in 3rd-party code is to apply a monkeypatch.</p>
+
+<p>But with great power comes great responsibility.</p>
+
+<h2 id="monkeypatching-responsibly">Monkeypatching Responsibly</h2>
+
+<p>I like to frame the monkeypatching conversation around responsibility instead of whether or not it’s good or bad. Sure, monkeypatching can cause chaos when done poorly. However, if done with some care and diligence, there’s no reason to avoid reaching for it when the situation warrants it.</p>
+
+<p>Here’s the list of rules I try to follow:</p>
+
+<ol>
+  <li>Wrap the patch in a module with an obvious name and use <code class="highlighter-rouge">Module#prepend</code> to apply it.</li>
+  <li>Make sure you’re patching the right thing.</li>
+  <li>Limit the patch’s surface area.</li>
+  <li>Give yourself escape hatches.</li>
+  <li>Over-communicate.</li>
+</ol>
+
+<p>For the remainder of this article, we’re going to use these rules to write up a monkeypatch for Rails’ <code class="highlighter-rouge">DateTimeSelector</code> so it optionally skips rendering discarded fields. This is a change I actually tried to make to Rails a few years ago. <a href="https://github.com/rails/rails/pull/31533">You can find the details here</a>.</p>
+
+<p>You don’t have to know much about discarded fields to understand the monkeypatch, though. At the end of the day, all it does is replace a single method called <code class="highlighter-rouge">build_hidden</code> with one that effectively does nothing.</p>
+
+<p>Let’s get started!</p>
+
+<h3 id="use-moduleprepend">Use <code class="highlighter-rouge">Module#prepend</code></h3>
+
+<p>In the codebase I encountered in my previous role, all the implementations of <code class="highlighter-rouge">String#%</code> were applied by reopening the <code class="highlighter-rouge">String</code> class. Here’s an augmented list of the drawbacks I mentioned earlier:</p>
+
+<ol>
+  <li>Errors appear to have originated from the host class or module instead of from the patch code.</li>
+  <li>Any methods you define in the patch replace existing methods with the same name, meaning there’s no way to invoke the original implementation.</li>
+  <li>There’s no way to know which patches were applied and therefore which methods “won”.</li>
+  <li>Patches leave almost no audit trail, which makes them very difficult to find later.</li>
+</ol>
+
+<p>Instead, it’s much better to wrap your patch in a module and apply it using <code class="highlighter-rouge">Module#prepend</code>. Doing so leaves you free to call the original implementation, and a quick call to <code class="highlighter-rouge">Module#ancestors</code> will show the patch in the inheritance hierarchy so it’s easier to find if things go wrong.</p>
+
+<p>Finally, a simple <code class="highlighter-rouge">prepend</code> statement is easy to comment out if you need to disable the patch for some reason.</p>
+
+<p>Here are the beginnings of a module for our Rails monkeypatch:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">RenderDiscardedMonkeypatch</span>
+<span class="k">end</span>
+
+<span class="no">ActionView</span><span class="o">::</span><span class="no">Helpers</span><span class="o">::</span><span class="no">DateTimeSelector</span><span class="p">.</span><span class="nf">prepend</span><span class="p">(</span>
+  <span class="no">RenderDiscardedMonkeypatch</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="patch-the-right-thing">Patch the Right Thing</h3>
+
+<p>If you take one thing away from this article, let it be this: don’t apply a monkeypatch unless you know you’re patching the right code. In most cases, it should be possible to verify programmatically that your assumptions still hold (this is Ruby after all). Here’s a checklist:</p>
+
+<ol>
+  <li>Make sure the class or module you’re trying to patch exists.</li>
+  <li>Make sure methods exist and have the right arity.</li>
+  <li>If the code you’re patching lives in a gem, check the gem’s version.</li>
+  <li>Bail out with a helpful error message if assumptions don’t hold.</li>
+</ol>
+
+<p>Right off the bat, our patch code has made a pretty important assumption. It assumes a constant called <code class="highlighter-rouge">ActionView::Helpers::DateTimeSelector</code> exists and is a class or module.</p>
+
+<h4 id="check-classmodule">Check Class/Module</h4>
+
+<p>Let’s make sure that constant exists before trying to patch it:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">RenderDiscardedMonkeypatch</span>
+<span class="k">end</span>
+
+<span class="n">const</span> <span class="o">=</span> <span class="k">begin</span>
+  <span class="no">Kernel</span><span class="p">.</span><span class="nf">const_get</span><span class="p">(</span><span class="s1">'ActionView::Helpers::DateTimeSelector'</span><span class="p">)</span>
+<span class="k">rescue</span> <span class="no">NameError</span>
+<span class="k">end</span>
+
+<span class="k">if</span> <span class="n">const</span>
+  <span class="n">const</span><span class="p">.</span><span class="nf">prepend</span><span class="p">(</span><span class="no">RenderDiscardedMonkeypatch</span><span class="p">)</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>Great, but now we’ve leaked a local variable (<code class="highlighter-rouge">const</code>) into the global scope. Let’s fix that:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">RenderDiscardedMonkeypatch</span>
+  <span class="k">def</span> <span class="nc">self</span><span class="o">.</span><span class="nf">apply_patch</span>
+    <span class="n">const</span> <span class="o">=</span> <span class="k">begin</span>
+      <span class="no">Kernel</span><span class="p">.</span><span class="nf">const_get</span><span class="p">(</span><span class="s1">'ActionView::Helpers::DateTimeSelector'</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">NameError</span>
+    <span class="k">end</span>
+
+    <span class="k">if</span> <span class="n">const</span>
+      <span class="n">const</span><span class="p">.</span><span class="nf">prepend</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">RenderDiscardedMonkeypatch</span><span class="p">.</span><span class="nf">apply_patch</span>
+</code></pre></div></div>
+
+<h4 id="check-methods">Check Methods</h4>
+
+<p>Next, let’s introduce the patched <code class="highlighter-rouge">build_hidden</code> method. Let’s also add a check to make sure it exists and accepts the right number of arguments (i.e. has the right arity). If those assumptions don’t hold, something’s probably wrong:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">RenderDiscardedMonkeypatch</span>
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="k">def</span> <span class="nf">apply_patch</span>
+      <span class="n">const</span> <span class="o">=</span> <span class="n">find_const</span>
+      <span class="n">mtd</span> <span class="o">=</span> <span class="n">find_method</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">const</span> <span class="o">&amp;&amp;</span> <span class="n">mtd</span> <span class="o">&amp;&amp;</span> <span class="n">mtd</span><span class="p">.</span><span class="nf">arity</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="n">const</span><span class="p">.</span><span class="nf">prepend</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+
+    <span class="kp">private</span>
+
+    <span class="k">def</span> <span class="nf">find_const</span>
+      <span class="no">Kernel</span><span class="p">.</span><span class="nf">const_get</span><span class="p">(</span><span class="s1">'ActionView::Helpers::DateTimeSelector'</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">NameError</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">find_method</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+      <span class="k">return</span> <span class="k">unless</span> <span class="n">const</span>
+      <span class="n">const</span><span class="p">.</span><span class="nf">instance_method</span><span class="p">(</span><span class="ss">:build_hidden</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">NameError</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">build_hidden</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="s1">''</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">RenderDiscardedMonkeypatch</span><span class="p">.</span><span class="nf">apply_patch</span>
+</code></pre></div></div>
+
+<h4 id="check-gem-versions">Check Gem Versions</h4>
+
+<p>Finally, let’s check that we’re using the right version of Rails. If Rails gets upgraded, we might need to update the patch too (or get rid of it entirely).</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">RenderDiscardedMonkeypatch</span>
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="k">def</span> <span class="nf">apply_patch</span>
+      <span class="n">const</span> <span class="o">=</span> <span class="n">find_const</span>
+      <span class="n">mtd</span> <span class="o">=</span> <span class="n">find_method</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="n">const</span> <span class="o">&amp;&amp;</span> <span class="n">mtd</span> <span class="o">&amp;&amp;</span> <span class="n">mtd</span><span class="p">.</span><span class="nf">arity</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">&amp;&amp;</span> <span class="n">rails_version_ok?</span>
+        <span class="n">const</span><span class="p">.</span><span class="nf">prepend</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+
+    <span class="kp">private</span>
+
+    <span class="k">def</span> <span class="nf">find_const</span>
+      <span class="no">Kernel</span><span class="p">.</span><span class="nf">const_get</span><span class="p">(</span><span class="s1">'ActionView::Helpers::DateTimeSelector'</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">NameError</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">find_method</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+      <span class="k">return</span> <span class="k">unless</span> <span class="n">const</span>
+      <span class="n">const</span><span class="p">.</span><span class="nf">instance_method</span><span class="p">(</span><span class="ss">:build_hidden</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">NameError</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">rails_version_ok?</span>
+      <span class="no">Rails</span><span class="o">::</span><span class="no">VERSION</span><span class="o">::</span><span class="no">MAJOR</span> <span class="o">==</span> <span class="mi">6</span> <span class="o">&amp;&amp;</span> <span class="no">Rails</span><span class="o">::</span><span class="no">VERSION</span><span class="o">::</span><span class="no">MINOR</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">build_hidden</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="s1">''</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">RenderDiscardedMonkeypatch</span><span class="p">.</span><span class="nf">apply_patch</span>
+</code></pre></div></div>
+
+<h4 id="bail-out-helpfully">Bail Out Helpfully</h4>
+
+<p>If your verification code uncovers a discrepancy between expectations and reality, it’s a good idea to raise an error or at least print a helpful warning message. The idea here is to alert you and your co-workers when something seems amiss.</p>
+
+<p>Here’s how we might modify our Rails patch:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">RenderDiscardedMonkeypatch</span>
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="k">def</span> <span class="nf">apply_patch</span>
+      <span class="n">const</span> <span class="o">=</span> <span class="n">find_const</span>
+      <span class="n">mtd</span> <span class="o">=</span> <span class="n">find_method</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+
+      <span class="k">unless</span> <span class="n">const</span> <span class="o">&amp;&amp;</span> <span class="n">mtd</span> <span class="o">&amp;&amp;</span> <span class="n">mtd</span><span class="p">.</span><span class="nf">arity</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">raise</span> <span class="s2">"Could not find class or method when patching "</span><span class="p">\</span>
+          <span class="s2">"ActionView's date_select helper. Please investigate."</span>
+      <span class="k">end</span>
+
+      <span class="k">unless</span> <span class="n">rails_version_ok?</span>
+        <span class="nb">puts</span> <span class="s2">"WARNING: It looks like Rails has been upgraded since "</span><span class="p">\</span>
+          <span class="s2">"ActionView's date_select helper was monkeypatched in "</span><span class="p">\</span>
+          <span class="s2">"</span><span class="si">#{</span><span class="kp">__FILE__</span><span class="si">}</span><span class="s2">. Please reevaluate the patch."</span>
+      <span class="k">end</span>
+
+      <span class="n">const</span><span class="p">.</span><span class="nf">prepend</span><span class="p">(</span><span class="nb">self</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="kp">private</span>
+
+    <span class="k">def</span> <span class="nf">find_const</span>
+      <span class="no">Kernel</span><span class="p">.</span><span class="nf">const_get</span><span class="p">(</span><span class="s1">'ActionView::Helpers::DateTimeSelector'</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">NameError</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">find_method</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+      <span class="k">return</span> <span class="k">unless</span> <span class="n">const</span>
+      <span class="n">const</span><span class="p">.</span><span class="nf">instance_method</span><span class="p">(</span><span class="ss">:build_hidden</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">NameError</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">rails_version_ok?</span>
+      <span class="no">Rails</span><span class="o">::</span><span class="no">VERSION</span><span class="o">::</span><span class="no">MAJOR</span> <span class="o">==</span> <span class="mi">6</span> <span class="o">&amp;&amp;</span> <span class="no">Rails</span><span class="o">::</span><span class="no">VERSION</span><span class="o">::</span><span class="no">MINOR</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">def</span> <span class="nf">build_hidden</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="s1">''</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">RenderDiscardedMonkeypatch</span><span class="p">.</span><span class="nf">apply_patch</span>
+</code></pre></div></div>
+
+<h3 id="limit-surface-area">Limit Surface Area</h3>
+
+<p>While it may seem perfectly innocuous to define helper methods in a monkeypatch, remember that any methods defined via <code class="highlighter-rouge">Module#prepend</code> will override existing ones through the magic of inheritance. While it might seem as though a host class or module doesn’t define a particular method, it’s difficult to know for sure. For this reason, I try only to  define methods I intend to patch.</p>
+
+<p>Note that this also applies to methods defined in the object’s singleton class, i.e. methods defined inside <code class="highlighter-rouge">class &lt;&lt; self</code>.</p>
+
+<p>Here’s how to modify our Rails patch to only replace the one <code class="highlighter-rouge">#build_hidden</code> method:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">RenderDiscardedMonkeypatch</span>
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="k">def</span> <span class="nf">apply_patch</span>
+      <span class="n">const</span> <span class="o">=</span> <span class="n">find_const</span>
+      <span class="n">mtd</span> <span class="o">=</span> <span class="n">find_method</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+
+      <span class="k">unless</span> <span class="n">const</span> <span class="o">&amp;&amp;</span> <span class="n">mtd</span> <span class="o">&amp;&amp;</span> <span class="n">mtd</span><span class="p">.</span><span class="nf">arity</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">raise</span> <span class="s2">"Could not find class or method when patching"</span><span class="p">\</span>
+          <span class="s2">"ActionView's date_select helper. Please investigate."</span>
+      <span class="k">end</span>
+
+      <span class="k">unless</span> <span class="n">rails_version_ok?</span>
+        <span class="nb">puts</span> <span class="s2">"WARNING: It looks like Rails has been upgraded since"</span><span class="p">\</span>
+          <span class="s2">"ActionView's date_selet helper was monkeypatched in "</span><span class="p">\</span>
+          <span class="s2">"</span><span class="si">#{</span><span class="kp">__FILE__</span><span class="si">}</span><span class="s2">. Please reevaluate the patch."</span>
+      <span class="k">end</span>
+
+      <span class="n">const</span><span class="p">.</span><span class="nf">prepend</span><span class="p">(</span><span class="no">InstanceMethods</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="kp">private</span>
+
+    <span class="k">def</span> <span class="nf">find_const</span>
+      <span class="no">Kernel</span><span class="p">.</span><span class="nf">const_get</span><span class="p">(</span><span class="s1">'ActionView::Helpers::DateTimeSelector'</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">NameError</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">find_method</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+      <span class="k">return</span> <span class="k">unless</span> <span class="n">const</span>
+      <span class="n">const</span><span class="p">.</span><span class="nf">instance_method</span><span class="p">(</span><span class="ss">:build_hidden</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">NameError</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">rails_version_ok?</span>
+      <span class="no">Rails</span><span class="o">::</span><span class="no">VERSION</span><span class="o">::</span><span class="no">MAJOR</span> <span class="o">==</span> <span class="mi">6</span> <span class="o">&amp;&amp;</span> <span class="no">Rails</span><span class="o">::</span><span class="no">VERSION</span><span class="o">::</span><span class="no">MINOR</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">module</span> <span class="nn">InstanceMethods</span>
+    <span class="k">def</span> <span class="nf">build_hidden</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+      <span class="s1">''</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">RenderDiscardedMonkeypatch</span><span class="p">.</span><span class="nf">apply_patch</span>
+</code></pre></div></div>
+
+<h3 id="give-yourself-escape-hatches">Give Yourself Escape Hatches</h3>
+
+<p>When possible, I like to make my monkeypatch’s functionality opt-in. That’s only really an option if you have control over where the patched code is invoked. In the case of our Rails patch, it’s doable via the <code class="highlighter-rouge">@options</code> hash in <code class="highlighter-rouge">DateTimeSelector</code>:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">module</span> <span class="nn">RenderDiscardedMonkeypatch</span>
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="k">def</span> <span class="nf">apply_patch</span>
+      <span class="n">const</span> <span class="o">=</span> <span class="n">find_const</span>
+      <span class="n">mtd</span> <span class="o">=</span> <span class="n">find_method</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+
+      <span class="k">unless</span> <span class="n">const</span> <span class="o">&amp;&amp;</span> <span class="n">mtd</span> <span class="o">&amp;&amp;</span> <span class="n">mtd</span><span class="p">.</span><span class="nf">arity</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">raise</span> <span class="s2">"Could not find class or method when patching"</span><span class="p">\</span>
+          <span class="s2">"ActionView's date_select helper. Please investigate."</span>
+      <span class="k">end</span>
+
+      <span class="k">unless</span> <span class="n">rails_version_ok?</span>
+        <span class="nb">puts</span> <span class="s2">"WARNING: It looks like Rails has been upgraded since"</span><span class="p">\</span>
+          <span class="s2">"ActionView's date_selet helper was monkeypatched in "</span><span class="p">\</span>
+          <span class="s2">"</span><span class="si">#{</span><span class="kp">__FILE__</span><span class="si">}</span><span class="s2">. Please reevaluate the patch."</span>
+      <span class="k">end</span>
+
+      <span class="n">const</span><span class="p">.</span><span class="nf">prepend</span><span class="p">(</span><span class="no">InstanceMethods</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="kp">private</span>
+
+    <span class="k">def</span> <span class="nf">find_const</span>
+      <span class="no">Kernel</span><span class="p">.</span><span class="nf">const_get</span><span class="p">(</span><span class="s1">'ActionView::Helpers::DateTimeSelector'</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">NameError</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">find_method</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+      <span class="k">return</span> <span class="k">unless</span> <span class="n">const</span>
+      <span class="n">const</span><span class="p">.</span><span class="nf">instance_method</span><span class="p">(</span><span class="ss">:build_hidden</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">NameError</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">rails_version_ok?</span>
+      <span class="no">Rails</span><span class="o">::</span><span class="no">VERSION</span><span class="o">::</span><span class="no">MAJOR</span> <span class="o">==</span> <span class="mi">6</span> <span class="o">&amp;&amp;</span> <span class="no">Rails</span><span class="o">::</span><span class="no">VERSION</span><span class="o">::</span><span class="no">MINOR</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">module</span> <span class="nn">InstanceMethods</span>
+    <span class="k">def</span> <span class="nf">build_hidden</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+      <span class="k">if</span> <span class="vi">@options</span><span class="p">.</span><span class="nf">fetch</span><span class="p">(</span><span class="ss">:render_discarded</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
+        <span class="k">super</span>
+      <span class="k">else</span>
+        <span class="s1">''</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">RenderDiscardedMonkeypatch</span><span class="p">.</span><span class="nf">apply_patch</span>
+</code></pre></div></div>
+
+<p>Nice! Now callers can opt-in by calling the <code class="highlighter-rouge">date_select</code> helper with the new option. No other codepaths are affected:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">date_select</span><span class="p">(</span><span class="vi">@user</span><span class="p">,</span> <span class="ss">:date_of_birth</span><span class="p">,</span> <span class="p">{</span>
+  <span class="ss">order: </span><span class="p">[</span><span class="ss">:month</span><span class="p">,</span> <span class="ss">:day</span><span class="p">],</span>
+  <span class="ss">render_discarded: </span><span class="kp">false</span>
+<span class="p">})</span>
+</code></pre></div></div>
+
+<h3 id="over-communicate">Over-Communicate</h3>
+
+<p>The last piece of advice I have for you is perhaps the most important - communicating what your patch does and when it’s time to re-examine it. Your goal with monkeypatches should always be to eventually remove the patch altogether. To that end, a responsible monkeypatch includes comments that:</p>
+
+<ol>
+  <li>Describe what the patch does.</li>
+  <li>Explain why the patch is necessary.</li>
+  <li>Outline the assumptions the patch makes.</li>
+  <li>Specify a date in the future when your team should reconsider alternative solutions, like pulling in an updated gem.</li>
+  <li>Include links to relevant pull requests, blog posts, StackOverflow answers, etc.</li>
+</ol>
+
+<p>You might even print a warning or fail a test on a predetermined date to urge the team to reconfirm the patch’s assumptions and consider whether or not it’s still necessary.</p>
+
+<p>Here’s the final version of our Rails <code class="highlighter-rouge">date_select</code> patch, complete with comments and a date check:</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># ActionView's date_select helper provides the option to "discard" certain</span>
+<span class="c1"># fields. Discarded fields are (confusingly) still rendered to the page</span>
+<span class="c1"># using hidden inputs, i.e. &lt;input type="hidden" /&gt;. This patch adds an</span>
+<span class="c1"># additional option to the date_select helper that allows the caller to</span>
+<span class="c1"># skip rendering the chosen fields altogether. For example, to render all</span>
+<span class="c1"># but the year field, you might have this in one of your views:</span>
+<span class="c1">#</span>
+<span class="c1"># date_select(:date_of_birth, order: [:month, :day])</span>
+<span class="c1">#</span>
+<span class="c1"># or, equivalently:</span>
+<span class="c1">#</span>
+<span class="c1"># date_select(:date_of_birth, discard_year: true)</span>
+<span class="c1">#</span>
+<span class="c1"># To avoid rendering the year field altogether, set :render_discarded to</span>
+<span class="c1"># false:</span>
+<span class="c1">#</span>
+<span class="c1"># date_select(:date_of_birth, discard_year: true, render_discarded: false)</span>
+<span class="c1">#</span>
+<span class="c1"># This patch assumes the #build_hidden method exists on</span>
+<span class="c1"># ActionView::Helpers::DateTimeSelector and accepts two arguments.</span>
+<span class="c1">#</span>
+<span class="k">module</span> <span class="nn">RenderDiscardedMonkeypatch</span>
+  <span class="k">class</span> <span class="o">&lt;&lt;</span> <span class="nb">self</span>
+    <span class="no">EXPIRATION_DATE</span> <span class="o">=</span> <span class="no">Date</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="mi">2021</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">apply_patch</span>
+      <span class="k">if</span> <span class="no">Date</span><span class="p">.</span><span class="nf">today</span> <span class="o">&gt;</span> <span class="no">EXPIRATION_DATE</span>
+        <span class="nb">puts</span> <span class="s2">"WARNING: Please re-evaluate whether or not the ActionView "</span><span class="p">\</span>
+          <span class="s2">"date_select patch present in </span><span class="si">#{</span><span class="kp">__FILE__</span><span class="si">}</span><span class="s2"> is still necessary."</span>
+      <span class="k">end</span>
+
+      <span class="n">const</span> <span class="o">=</span> <span class="n">find_const</span>
+      <span class="n">mtd</span> <span class="o">=</span> <span class="n">find_method</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+
+      <span class="c1"># make sure the class we want to patch exists;</span>
+      <span class="c1"># make sure the #build_hidden method exists and accepts exactly</span>
+      <span class="c1"># two arguments</span>
+      <span class="k">unless</span> <span class="n">const</span> <span class="o">&amp;&amp;</span> <span class="n">mtd</span> <span class="o">&amp;&amp;</span> <span class="n">mtd</span><span class="p">.</span><span class="nf">arity</span> <span class="o">==</span> <span class="mi">2</span>
+        <span class="k">raise</span> <span class="s2">"Could not find class or method when patching "</span><span class="p">\</span>
+          <span class="s2">"ActionView's date_select helper. Please investigate."</span>
+      <span class="k">end</span>
+
+      <span class="c1"># if rails has been upgraded, make sure this patch is still</span>
+      <span class="c1"># necessary</span>
+      <span class="k">unless</span> <span class="n">rails_version_ok?</span>
+        <span class="nb">puts</span> <span class="s2">"WARNING: It looks like Rails has been upgraded since "</span><span class="p">\</span>
+          <span class="s2">"ActionView's date_select helper was monkeypatched in "</span><span class="p">\</span>
+          <span class="s2">"</span><span class="si">#{</span><span class="kp">__FILE__</span><span class="si">}</span><span class="s2">. Please re-evaluate the patch."</span>
+      <span class="k">end</span>
+
+      <span class="c1"># actually apply the patch</span>
+      <span class="n">const</span><span class="p">.</span><span class="nf">prepend</span><span class="p">(</span><span class="no">InstanceMethods</span><span class="p">)</span>
+    <span class="k">end</span>
+
+    <span class="kp">private</span>
+
+    <span class="k">def</span> <span class="nf">find_const</span>
+      <span class="no">Kernel</span><span class="p">.</span><span class="nf">const_get</span><span class="p">(</span><span class="s1">'ActionView::Helpers::DateTimeSelector'</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">NameError</span>
+      <span class="c1"># return nil if the constant doesn't exist</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">find_method</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+      <span class="k">return</span> <span class="k">unless</span> <span class="n">const</span>
+      <span class="n">const</span><span class="p">.</span><span class="nf">instance_method</span><span class="p">(</span><span class="ss">:build_hidden</span><span class="p">)</span>
+    <span class="k">rescue</span> <span class="no">NameError</span>
+      <span class="c1"># return nil if the method doesn't exist</span>
+    <span class="k">end</span>
+
+    <span class="k">def</span> <span class="nf">rails_version_ok?</span>
+      <span class="no">Rails</span><span class="o">::</span><span class="no">VERSION</span><span class="o">::</span><span class="no">MAJOR</span> <span class="o">==</span> <span class="mi">6</span> <span class="o">&amp;&amp;</span> <span class="no">Rails</span><span class="o">::</span><span class="no">VERSION</span><span class="o">::</span><span class="no">MINOR</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+
+  <span class="k">module</span> <span class="nn">InstanceMethods</span>
+    <span class="c1"># :render_discarded is an additional option you can pass to the</span>
+    <span class="c1"># date_select helper in your views. Use it to avoid rendering</span>
+    <span class="c1"># "discarded" fields, i.e. fields marked as discarded or simply</span>
+    <span class="c1"># not included in date_select's :order array. For example,</span>
+    <span class="c1"># specifying order: [:day, :month] will cause the helper to</span>
+    <span class="c1"># "discard" the :year field. Discarding a field renders it as a</span>
+    <span class="c1"># hidden input. Set :render_discarded to false to avoid rendering</span>
+    <span class="c1"># it altogether.</span>
+    <span class="k">def</span> <span class="nf">build_hidden</span><span class="p">(</span><span class="n">type</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+      <span class="k">if</span> <span class="vi">@options</span><span class="p">.</span><span class="nf">fetch</span><span class="p">(</span><span class="ss">:render_discarded</span><span class="p">,</span> <span class="kp">true</span><span class="p">)</span>
+        <span class="k">super</span>
+      <span class="k">else</span>
+        <span class="s1">''</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="no">RenderDiscardedMonkeypatch</span><span class="p">.</span><span class="nf">apply_patch</span>
+</code></pre></div></div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>I totally get that some of the suggestions I’ve outlined above might seem like overkill. Our Rails patch contains way more defensive verification code than actual patch code!</p>
+
+<p>Think of all that extra code as a sheath for your broadsword. It’s a lot easier to avoid getting cut if it’s enveloped in a layer of protection.</p>
+
+<p><img src="https://media.giphy.com/media/KFPRdKqy96oaI4HWEn/giphy-downsized.gif" alt="Sword guitar" /></p>
+
+<p>What really matters, though, is that I feel confident deploying responsible monkeypatches into production. Irresponsible ones are just time bombs waiting to cost you or your company time, money, and developer health.</p>
+
+      </div>
+    </div>
+  </section>
+</article>
+
+    </main>
+
+    <footer class="footer">
+  <div class="container">
+    <div class="columns">
+      <div class="column is-5">
+        <div class="logo">
+          Camertron's Blog
+        </div>
+
+        <h4>
+          My thoughts on programming, mostly with Ruby
+        </h4>
+
+        <div class="mt-3">
+          Follow on Twitter: <strong><a href="https://twitter.com/camertron">@camertron</strong></a>
+        </div>
+
+      </div>
+      <div class="column is-4">
+      </div>
+      <div class="column is-3">
+        <h4>
+          <strong>Share</strong> on Social Media
+        </h4>
+
+        <div class="mt-5">
+          <a href="https://twitter.com/intent/tweet?url=&via=camertron&text=Check%20out%20this%20awesome%20new%20site%20built%20with%20Bridgetown%20and%20Ruby%21&hashtags=SpinUpBridgetown%2CJamstack" class="button is-info">
+            <span class="icon"> <i class="fa fa-twitter is-size-5"></i> </span>
+            <span class="has-text-weight-bold">Tweet</span>
+          </a>
+        </div>
+
+        <div class="mt-6">
+          <a href="/feed.xml" class="button is-danger is-small">
+            <span class="icon"> <i class="fa fa-rss"></i> </span>
+            <span class="has-text-weight-bold">News Feed</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+  </body>
+</html>

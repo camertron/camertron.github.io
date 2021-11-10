@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://bridgetownrb.com/" version="0.20.0">Bridgetown</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-11-09T20:59:42-08:00</updated><id>/feed.xml</id><title type="html">Camertron’s Blog</title><subtitle>My thoughts on programming, mostly using Ruby and Rails.</subtitle><entry><title type="html">Some Thoughts on Technical Debt</title><link href="/2021/11/09/some-thoughts-on-technical-debt/" rel="alternate" type="text/html" title="Some Thoughts on Technical Debt" /><published>2021-11-09T20:53:00-08:00</published><updated>2021-11-09T20:53:00-08:00</updated><id>/2021/11/09/some-thoughts-on-technical-debt</id><content type="html" xml:base="/2021/11/09/some-thoughts-on-technical-debt/">&lt;p&gt;My thoughts on a &lt;a href=&quot;https://www.redhat.com/en/compiler-podcast/what-is-technical-debt&quot;&gt;“recent episode of the Compiler podcast”&lt;/a&gt; entitled “Do We Want a World Without Technical Debt?”&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://bridgetownrb.com/" version="0.20.0">Bridgetown</generator><link href="/feed.xml" rel="self" type="application/atom+xml" /><link href="/" rel="alternate" type="text/html" /><updated>2021-11-09T21:42:44-08:00</updated><id>/feed.xml</id><title type="html">Camertron’s Blog</title><subtitle>My thoughts on programming, mostly using Ruby and Rails.</subtitle><entry><title type="html">Some Thoughts on Technical Debt</title><link href="/2021/11/09/some-thoughts-on-technical-debt/" rel="alternate" type="text/html" title="Some Thoughts on Technical Debt" /><published>2021-11-09T20:53:00-08:00</published><updated>2021-11-09T20:53:00-08:00</updated><id>/2021/11/09/some-thoughts-on-technical-debt</id><content type="html" xml:base="/2021/11/09/some-thoughts-on-technical-debt/">&lt;p&gt;My thoughts on a &lt;a href=&quot;https://www.redhat.com/en/compiler-podcast/what-is-technical-debt&quot;&gt;“recent episode of the Compiler podcast”&lt;/a&gt; entitled “Do We Want a World Without Technical Debt?”&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Published on November 9th, 2021&lt;/strong&gt;&lt;/p&gt;
+&lt;hr /&gt;
 
 &lt;p&gt;I’m a big fan of pretty much everything Saron Yitbarek does, and recently one of those things has been the excellent &lt;a href=&quot;https://www.redhat.com/en/command-line-heroes&quot;&gt;Command Line Heroes&lt;/a&gt; podcast. The most recent show was actually promoting another podcast called Compiler, specifically their fourth episode entitled &lt;a href=&quot;https://www.redhat.com/en/compiler-podcast/what-is-technical-debt&quot;&gt;“Do We Want a World Without Technical Debt?”&lt;/a&gt;.&lt;/p&gt;
 
@@ -60,9 +60,697 @@
 
 &lt;p&gt;Frame the tech debt conversation in terms of the inevitability of bad code. In my opinion, there’s no such thing as “bad” code running in production anyway. If it’s making you money, it probably isn’t bad. With that mindset, debt becomes the sort of tool it is in the financial sector. Let it free you from worrying about writing flawless code, and from the negative connotations associated with the word “debt.”&lt;/p&gt;
 
-&lt;p&gt;Happy hacking :)&lt;/p&gt;</content><author><name></name></author><summary type="html">My thoughts on a “recent episode of the Compiler podcast” entitled “Do We Want a World Without Technical Debt?”</summary></entry><entry><title type="html">Installing 220 Gems in 40 Seconds</title><link href="/2021/08/14/installing-220-gems-in-40-seconds/" rel="alternate" type="text/html" title="Installing 220 Gems in 40 Seconds" /><published>2021-08-14T21:30:00-07:00</published><updated>2021-08-14T21:30:00-07:00</updated><id>/2021/08/14/installing-220-gems-in-40-seconds</id><content type="html" xml:base="/2021/08/14/installing-220-gems-in-40-seconds/">&lt;p&gt;I gave a &lt;a href=&quot;https://youtu.be/YMoa5JpjEtM?t=1315&quot;&gt;lightning talk&lt;/a&gt; at RubyConf in 2017 about a gem I was working on at the time called &lt;a href=&quot;https://github.com/camertron/prebundler&quot;&gt;prebundler&lt;/a&gt;.  I recently spent a bunch of time improving it, so I thought I’d write up a post.&lt;/p&gt;
+&lt;p&gt;Happy hacking :)&lt;/p&gt;</content><author><name>Cameron Dutro</name></author><summary type="html">My thoughts on a “recent episode of the Compiler podcast” entitled “Do We Want a World Without Technical Debt?”</summary></entry><entry><title type="html">Responsible Monkeypatching</title><link href="/2021/08/24/responsible-monkeypatching/" rel="alternate" type="text/html" title="Responsible Monkeypatching" /><published>2021-08-24T12:00:00-07:00</published><updated>2021-08-24T12:00:00-07:00</updated><id>/2021/08/24/responsible-monkeypatching</id><content type="html" xml:base="/2021/08/24/responsible-monkeypatching/">&lt;p&gt;This is a &lt;a href=&quot;https://blog.appsignal.com/2021/08/24/responsible-monkeypatching-in-ruby.html&quot;&gt;post&lt;/a&gt; I wrote for the AppSignal blog about how to monkeypatch without making a mess :)&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Published on August 14th, 2021&lt;/strong&gt;&lt;/p&gt;
+&lt;hr /&gt;
+
+&lt;link rel=&quot;canonical&quot; href=&quot;https://blog.appsignal.com/2021/08/24/responsible-monkeypatching-in-ruby.html&quot; /&gt;
+
+&lt;p&gt;When I first started writing Ruby code professionally back in 2011, one of the things that impressed me the most about the language was its flexibility. It felt as though with Ruby, everything was possible. Compared to the rigidity of languages like C# and Java, Ruby programs almost seemed like they were &lt;em&gt;alive&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Consider how many incredible things you can do in a Ruby program. You can define and delete methods at will. You can call methods that don’t exist. You can conjure entire nameless classes out of thin air. It’s absolutely wild.&lt;/p&gt;
+
+&lt;p&gt;But that’s not where the story ends. While you can apply these techniques inside your own code, Ruby also lets you apply them to anything loaded into the virtual machine. In other words, you can mess with other people’s code as easily as you can your own.&lt;/p&gt;
+
+&lt;h2 id=&quot;what-are-monkeypatches&quot;&gt;What Are Monkeypatches?&lt;/h2&gt;
+
+&lt;p&gt;Enter the &lt;em&gt;monkeypatch&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;In short, monkeypatches “monkey with” existing code. The existing code is often code you don’t have direct access to, like code from a gem or from the Ruby standard library. Patches are usually designed to alter the original code’s behavior to fix a bug, improve performance, etc.&lt;/p&gt;
+
+&lt;p&gt;The most unsophisticated monkeypatches reopen ruby classes and modify behavior by adding or overriding methods.&lt;/p&gt;
+
+&lt;p&gt;This reopening idea is core to Ruby’s object model. Whereas in Java classes can only be defined once, Ruby classes (and modules for that matter) can be defined multiple times. When we define a class a second, a third, a fourth time, etc, we say that we’re &lt;em&gt;reopening&lt;/em&gt; it. Any new methods we define are added to the existing class definition, and can be called on instances of that class.&lt;/p&gt;
+
+&lt;p&gt;This short example illustrates the class reopening concept:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Sounds&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;honk&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;Honk!&quot;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Sounds&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;squeak&lt;/span&gt;
+    &lt;span class=&quot;s2&quot;&gt;&quot;Squeak!&quot;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;sounds&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Sounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;honk&lt;/span&gt;    &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &quot;Honk!&quot;&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sounds&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;squeak&lt;/span&gt;  &lt;span class=&quot;c1&quot;&gt;# =&amp;gt; &quot;Squeak!&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Notice that both the &lt;code class=&quot;highlighter-rouge&quot;&gt;#honk&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;#squeak&lt;/code&gt; methods are available on the &lt;code class=&quot;highlighter-rouge&quot;&gt;Sounds&lt;/code&gt; class through the magic of reopening.&lt;/p&gt;
+
+&lt;p&gt;Monkeypatching is essentially the act of reopening classes in 3rd-party code.&lt;/p&gt;
+
+&lt;h2 id=&quot;is-monkeypatching-dangerous&quot;&gt;Is Monkeypatching Dangerous?&lt;/h2&gt;
+
+&lt;p&gt;If the previous sentence scared you, that’s probably a good thing. Monkeypatching, especially when done carelessly, can cause real chaos.&lt;/p&gt;
+
+&lt;p&gt;Consider for a moment what would happen if we were to redefine &lt;code class=&quot;highlighter-rouge&quot;&gt;Array#&amp;lt;&amp;lt;&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Array&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;args&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# do nothing 😈&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;With these four lines of code, every single array instance in the entire program is now broken.&lt;/p&gt;
+
+&lt;p&gt;What’s more, the original implementation of &lt;code class=&quot;highlighter-rouge&quot;&gt;#&amp;lt;&amp;lt;&lt;/code&gt; is gone. Aside from restarting the Ruby process, there’s no way to get it back.&lt;/p&gt;
+
+&lt;h2 id=&quot;when-monkeypatching-goes-horribly-wrong&quot;&gt;When Monkeypatching Goes Horribly Wrong&lt;/h2&gt;
+
+&lt;p&gt;Back in 2011, I worked for a prominent social networking company. At the time, the codebase was a massive Rails monolith running on Ruby 1.8.7. Several hundred engineers contributed to the codebase on a daily basis, and the pace of development was very fast.&lt;/p&gt;
+
+&lt;p&gt;At one point my team decided to monkeypatch &lt;code class=&quot;highlighter-rouge&quot;&gt;String#%&lt;/code&gt; to make writing plurals easier for internationalization purposes. Here’s an example of what our patch could do:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;replacements&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;ss&quot;&gt;horse_count: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+  &lt;span class=&quot;ss&quot;&gt;horses: &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;ss&quot;&gt;one: &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;is 1 horse&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;ss&quot;&gt;other: &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;are %{horse_count} horses&quot;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# &quot;there are 3 horses in the barn&quot;&lt;/span&gt;
+&lt;span class=&quot;s2&quot;&gt;&quot;there %{horse_count:horses} in the barn&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;replacements&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;We wrote up the patch and eventually got it deployed into production…only to find that it didn’t work. Our users were seeing strings with literal &lt;code class=&quot;highlighter-rouge&quot;&gt;%{...}&lt;/code&gt; characters instead of nicely pluralized text. It didn’t make sense. The patch had worked perfectly well in the development environment on my laptop. Why wasn’t it working in production?&lt;/p&gt;
+
+&lt;p&gt;Initially, we thought we’d found a bug in Ruby itself, only to later find that a production Rails console produced a different result than a Rails console in development. Since both consoles ran on the same Ruby version, we could rule out a bug in the Ruby standard library. Something else was going on.&lt;/p&gt;
+
+&lt;p&gt;After several days of head-scratching, a co-worker was able to track down a Rails initializer that added &lt;em&gt;another&lt;/em&gt; implementation of &lt;code class=&quot;highlighter-rouge&quot;&gt;String#%&lt;/code&gt; that none of us had seen before. To further complicate things, this earlier implementation also contained a bug, so the results we saw in the production console differed from Ruby’s official documentation.&lt;/p&gt;
+
+&lt;p&gt;That’s not the end of the story though. In tracking down the earlier monkeypatch, we also found no less than three more, &lt;em&gt;all patching the same method.&lt;/em&gt; We looked at each other in horror. How did this ever work??&lt;/p&gt;
+
+&lt;p&gt;We eventually chalked the inconsistent behavior up to Rails’ eager loading. In development, Rails lazy loads Ruby files, i.e., only loads them when they are &lt;code class=&quot;highlighter-rouge&quot;&gt;require&lt;/code&gt;d. In production, however, Rails loads all of the app’s Ruby files at initialization. This can throw a big monkey wrench into monkeypatching.&lt;/p&gt;
+
+&lt;h2 id=&quot;consequences-of-reopening-a-class&quot;&gt;Consequences of Reopening a Class&lt;/h2&gt;
+
+&lt;p&gt;In this case, each of the monkeypatches reopened the &lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt; class and effectively replaced the existing version of the &lt;code class=&quot;highlighter-rouge&quot;&gt;#%&lt;/code&gt; method with another one. There are several major pitfalls to this approach:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The last patch applied “wins”, meaning behavior is dependent on load order.&lt;/li&gt;
+  &lt;li&gt;There’s no way to access the original implementation.&lt;/li&gt;
+  &lt;li&gt;Patches leave almost no audit trail, which makes them very difficult to find later.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Not surprisingly, perhaps, we ran into all of these.&lt;/p&gt;
+
+&lt;p&gt;At first, we didn’t even know there were other monkeypatches at play. Because of the bug in the winning method, it appeared the original implementation was broken. When we discovered the other competing patches, it was impossible to tell which won without adding copious &lt;code class=&quot;highlighter-rouge&quot;&gt;puts&lt;/code&gt; statements.&lt;/p&gt;
+
+&lt;p&gt;Finally, even when we did discover which method won in development, a different one would win in production. It was also programmatically difficult to tell which patch had been applied last since Ruby 1.8 didn’t have the wonderful &lt;code class=&quot;highlighter-rouge&quot;&gt;Method#source_location&lt;/code&gt; method we have now.&lt;/p&gt;
+
+&lt;p&gt;I spent at least a week trying to figure out what was going on, time I essentially wasted chasing an entirely avoidable problem.&lt;/p&gt;
+
+&lt;p&gt;Eventually, we decided to introduce the &lt;code class=&quot;highlighter-rouge&quot;&gt;LocalizedString&lt;/code&gt; wrapper class with an accompanying &lt;code class=&quot;highlighter-rouge&quot;&gt;#%&lt;/code&gt; method. Our &lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt; monkeypatch then simply became this:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;String&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;localize&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;LocalizedString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;when-monkeypatching-fails&quot;&gt;When Monkeypatching Fails&lt;/h2&gt;
+
+&lt;p&gt;In my experience, monkeypatches often fail for one of two reasons:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;strong&gt;The patch itself is broken.&lt;/strong&gt; In the codebase I mentioned above, not only were there several competing implementations of the same method, but the method that “won” didn’t work.&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Assumptions are invalid.&lt;/strong&gt; The host code has been updated and the patch no longer applies as written.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Let’s look at the second bullet point in more detail.&lt;/p&gt;
+
+&lt;h2 id=&quot;even-the-best-laid-plans&quot;&gt;Even the Best-Laid Plans…&lt;/h2&gt;
+
+&lt;p&gt;Monkeypatching often fails for the same reason you reached for it in the first place - because you don’t have access to the original code. For precisely that reason, the original code can change out from under you.&lt;/p&gt;
+
+&lt;p&gt;Consider this example in a gem your app depends on:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Sale&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;discount_pct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tax_rate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@amount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@discount_pct&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;discount_pct&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@tax_rate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tax_rate&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;total&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;discounted_amount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sales_tax&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;discounted_amount&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@amount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@discount_pct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sales_tax&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@tax_rate&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;discounted_amount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@tax_rate&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+      &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Wait, that’s not right. Sales tax should be applied to the full amount, not the discounted amount. You submit a pull request to the project. While you’re waiting for the maintainer to merge your PR, you add this monkeypatch to your app:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Sale&lt;/span&gt;
+  &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sales_tax&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@tax_rate&lt;/span&gt;
+      &lt;span class=&quot;vi&quot;&gt;@amount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@tax_rate&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+      &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;It works perfectly. You check it in and forget about it.&lt;/p&gt;
+
+&lt;p&gt;Everything is fine for a long time. Then one day the finance team sends you an email asking why the company hasn’t been collecting sales tax for a month.&lt;/p&gt;
+
+&lt;p&gt;Confused, you start digging into the issue and eventually notice one of your co-workers recently updated the gem that contains the &lt;code class=&quot;highlighter-rouge&quot;&gt;Sale&lt;/code&gt; class. Here’s the updated code:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Sale&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;discount_pct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sales_tax_rate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@amount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;amount&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@discount_pct&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;discount_pct&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@sales_tax_rate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sales_tax_rate&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;total&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;discounted_amount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sales_tax&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;discounted_amount&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@amount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@discount_pct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sales_tax&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@sales_tax_rate&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;discounted_amount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@sales_tax_rate&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+      &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Looks like one of the project maintainers renamed the &lt;code class=&quot;highlighter-rouge&quot;&gt;@tax_rate&lt;/code&gt; instance variable to &lt;code class=&quot;highlighter-rouge&quot;&gt;@sales_tax_rate&lt;/code&gt;. The monkeypatch checks the value of the old &lt;code class=&quot;highlighter-rouge&quot;&gt;@tax_rate&lt;/code&gt; variable, which is always &lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;. Nobody noticed because no errors were ever raised. The app chugged along as if nothing had happened.&lt;/p&gt;
+
+&lt;h2 id=&quot;why-monkeypatch&quot;&gt;Why Monkeypatch?&lt;/h2&gt;
+
+&lt;p&gt;Given these examples, it might seem like monkeypatching just isn’t worth the potential headaches. So why do we do it? In my opinion, there are three major use-cases:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;To fix broken or incomplete 3rd-party code.&lt;/li&gt;
+  &lt;li&gt;To quickly test a change or multiple changes in development.&lt;/li&gt;
+  &lt;li&gt;To wrap existing functionality with instrumentation or annotation code.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;In some cases, the &lt;em&gt;only&lt;/em&gt; viable way to address a bug or performance issue in 3rd-party code is to apply a monkeypatch.&lt;/p&gt;
+
+&lt;p&gt;But with great power comes great responsibility.&lt;/p&gt;
+
+&lt;h2 id=&quot;monkeypatching-responsibly&quot;&gt;Monkeypatching Responsibly&lt;/h2&gt;
+
+&lt;p&gt;I like to frame the monkeypatching conversation around responsibility instead of whether or not it’s good or bad. Sure, monkeypatching can cause chaos when done poorly. However, if done with some care and diligence, there’s no reason to avoid reaching for it when the situation warrants it.&lt;/p&gt;
+
+&lt;p&gt;Here’s the list of rules I try to follow:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Wrap the patch in a module with an obvious name and use &lt;code class=&quot;highlighter-rouge&quot;&gt;Module#prepend&lt;/code&gt; to apply it.&lt;/li&gt;
+  &lt;li&gt;Make sure you’re patching the right thing.&lt;/li&gt;
+  &lt;li&gt;Limit the patch’s surface area.&lt;/li&gt;
+  &lt;li&gt;Give yourself escape hatches.&lt;/li&gt;
+  &lt;li&gt;Over-communicate.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;For the remainder of this article, we’re going to use these rules to write up a monkeypatch for Rails’ &lt;code class=&quot;highlighter-rouge&quot;&gt;DateTimeSelector&lt;/code&gt; so it optionally skips rendering discarded fields. This is a change I actually tried to make to Rails a few years ago. &lt;a href=&quot;https://github.com/rails/rails/pull/31533&quot;&gt;You can find the details here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;You don’t have to know much about discarded fields to understand the monkeypatch, though. At the end of the day, all it does is replace a single method called &lt;code class=&quot;highlighter-rouge&quot;&gt;build_hidden&lt;/code&gt; with one that effectively does nothing.&lt;/p&gt;
+
+&lt;p&gt;Let’s get started!&lt;/p&gt;
+
+&lt;h3 id=&quot;use-moduleprepend&quot;&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;Module#prepend&lt;/code&gt;&lt;/h3&gt;
+
+&lt;p&gt;In the codebase I encountered in my previous role, all the implementations of &lt;code class=&quot;highlighter-rouge&quot;&gt;String#%&lt;/code&gt; were applied by reopening the &lt;code class=&quot;highlighter-rouge&quot;&gt;String&lt;/code&gt; class. Here’s an augmented list of the drawbacks I mentioned earlier:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Errors appear to have originated from the host class or module instead of from the patch code.&lt;/li&gt;
+  &lt;li&gt;Any methods you define in the patch replace existing methods with the same name, meaning there’s no way to invoke the original implementation.&lt;/li&gt;
+  &lt;li&gt;There’s no way to know which patches were applied and therefore which methods “won”.&lt;/li&gt;
+  &lt;li&gt;Patches leave almost no audit trail, which makes them very difficult to find later.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Instead, it’s much better to wrap your patch in a module and apply it using &lt;code class=&quot;highlighter-rouge&quot;&gt;Module#prepend&lt;/code&gt;. Doing so leaves you free to call the original implementation, and a quick call to &lt;code class=&quot;highlighter-rouge&quot;&gt;Module#ancestors&lt;/code&gt; will show the patch in the inheritance hierarchy so it’s easier to find if things go wrong.&lt;/p&gt;
+
+&lt;p&gt;Finally, a simple &lt;code class=&quot;highlighter-rouge&quot;&gt;prepend&lt;/code&gt; statement is easy to comment out if you need to disable the patch for some reason.&lt;/p&gt;
+
+&lt;p&gt;Here are the beginnings of a module for our Rails monkeypatch:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;ActionView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Helpers&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;DateTimeSelector&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;patch-the-right-thing&quot;&gt;Patch the Right Thing&lt;/h3&gt;
+
+&lt;p&gt;If you take one thing away from this article, let it be this: don’t apply a monkeypatch unless you know you’re patching the right code. In most cases, it should be possible to verify programmatically that your assumptions still hold (this is Ruby after all). Here’s a checklist:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Make sure the class or module you’re trying to patch exists.&lt;/li&gt;
+  &lt;li&gt;Make sure methods exist and have the right arity.&lt;/li&gt;
+  &lt;li&gt;If the code you’re patching lives in a gem, check the gem’s version.&lt;/li&gt;
+  &lt;li&gt;Bail out with a helpful error message if assumptions don’t hold.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Right off the bat, our patch code has made a pretty important assumption. It assumes a constant called &lt;code class=&quot;highlighter-rouge&quot;&gt;ActionView::Helpers::DateTimeSelector&lt;/code&gt; exists and is a class or module.&lt;/p&gt;
+
+&lt;h4 id=&quot;check-classmodule&quot;&gt;Check Class/Module&lt;/h4&gt;
+
+&lt;p&gt;Let’s make sure that constant exists before trying to patch it:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;begin&lt;/span&gt;
+  &lt;span class=&quot;no&quot;&gt;Kernel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;const_get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;ActionView::Helpers::DateTimeSelector&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NameError&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Great, but now we’ve leaked a local variable (&lt;code class=&quot;highlighter-rouge&quot;&gt;const&lt;/code&gt;) into the global scope. Let’s fix that:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;begin&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Kernel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;const_get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;ActionView::Helpers::DateTimeSelector&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NameError&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;check-methods&quot;&gt;Check Methods&lt;/h4&gt;
+
+&lt;p&gt;Next, let’s introduce the patched &lt;code class=&quot;highlighter-rouge&quot;&gt;build_hidden&lt;/code&gt; method. Let’s also add a check to make sure it exists and accepts the right number of arguments (i.e. has the right arity). If those assumptions don’t hold, something’s probably wrong:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_const&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;arity&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;find_const&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Kernel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;const_get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;ActionView::Helpers::DateTimeSelector&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NameError&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;find_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;instance_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:build_hidden&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NameError&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;build_hidden&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&apos;&apos;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;check-gem-versions&quot;&gt;Check Gem Versions&lt;/h4&gt;
+
+&lt;p&gt;Finally, let’s check that we’re using the right version of Rails. If Rails gets upgraded, we might need to update the patch too (or get rid of it entirely).&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_const&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;arity&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails_version_ok?&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;find_const&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Kernel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;const_get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;ActionView::Helpers::DateTimeSelector&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NameError&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;find_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;instance_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:build_hidden&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NameError&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;rails_version_ok?&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;MAJOR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;MINOR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;build_hidden&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&apos;&apos;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;bail-out-helpfully&quot;&gt;Bail Out Helpfully&lt;/h4&gt;
+
+&lt;p&gt;If your verification code uncovers a discrepancy between expectations and reality, it’s a good idea to raise an error or at least print a helpful warning message. The idea here is to alert you and your co-workers when something seems amiss.&lt;/p&gt;
+
+&lt;p&gt;Here’s how we might modify our Rails patch:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_const&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+      &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;arity&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;raise&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Could not find class or method when patching &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;\&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&quot;ActionView&apos;s date_select helper. Please investigate.&quot;&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+      &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails_version_ok?&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;WARNING: It looks like Rails has been upgraded since &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;\&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&quot;ActionView&apos;s date_select helper was monkeypatched in &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;\&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;__FILE__&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;. Please reevaluate the patch.&quot;&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;find_const&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Kernel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;const_get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;ActionView::Helpers::DateTimeSelector&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NameError&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;find_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;instance_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:build_hidden&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NameError&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;rails_version_ok?&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;MAJOR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;MINOR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;build_hidden&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;s1&quot;&gt;&apos;&apos;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;limit-surface-area&quot;&gt;Limit Surface Area&lt;/h3&gt;
+
+&lt;p&gt;While it may seem perfectly innocuous to define helper methods in a monkeypatch, remember that any methods defined via &lt;code class=&quot;highlighter-rouge&quot;&gt;Module#prepend&lt;/code&gt; will override existing ones through the magic of inheritance. While it might seem as though a host class or module doesn’t define a particular method, it’s difficult to know for sure. For this reason, I try only to  define methods I intend to patch.&lt;/p&gt;
+
+&lt;p&gt;Note that this also applies to methods defined in the object’s singleton class, i.e. methods defined inside &lt;code class=&quot;highlighter-rouge&quot;&gt;class &amp;lt;&amp;lt; self&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here’s how to modify our Rails patch to only replace the one &lt;code class=&quot;highlighter-rouge&quot;&gt;#build_hidden&lt;/code&gt; method:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_const&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+      &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;arity&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;raise&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Could not find class or method when patching&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;\&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&quot;ActionView&apos;s date_select helper. Please investigate.&quot;&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+      &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails_version_ok?&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;WARNING: It looks like Rails has been upgraded since&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;\&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&quot;ActionView&apos;s date_selet helper was monkeypatched in &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;\&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;__FILE__&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;. Please reevaluate the patch.&quot;&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;InstanceMethods&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;find_const&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Kernel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;const_get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;ActionView::Helpers::DateTimeSelector&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NameError&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;find_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;instance_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:build_hidden&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NameError&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;rails_version_ok?&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;MAJOR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;MINOR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;InstanceMethods&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;build_hidden&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;s1&quot;&gt;&apos;&apos;&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;give-yourself-escape-hatches&quot;&gt;Give Yourself Escape Hatches&lt;/h3&gt;
+
+&lt;p&gt;When possible, I like to make my monkeypatch’s functionality opt-in. That’s only really an option if you have control over where the patched code is invoked. In the case of our Rails patch, it’s doable via the &lt;code class=&quot;highlighter-rouge&quot;&gt;@options&lt;/code&gt; hash in &lt;code class=&quot;highlighter-rouge&quot;&gt;DateTimeSelector&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_const&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+      &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;arity&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;raise&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Could not find class or method when patching&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;\&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&quot;ActionView&apos;s date_select helper. Please investigate.&quot;&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+      &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails_version_ok?&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;WARNING: It looks like Rails has been upgraded since&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;\&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&quot;ActionView&apos;s date_selet helper was monkeypatched in &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;\&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;__FILE__&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;. Please reevaluate the patch.&quot;&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;InstanceMethods&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;find_const&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Kernel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;const_get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;ActionView::Helpers::DateTimeSelector&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NameError&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;find_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;instance_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:build_hidden&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NameError&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;rails_version_ok?&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;MAJOR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;MINOR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;InstanceMethods&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;build_hidden&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:render_discarded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+        &lt;span class=&quot;s1&quot;&gt;&apos;&apos;&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Nice! Now callers can opt-in by calling the &lt;code class=&quot;highlighter-rouge&quot;&gt;date_select&lt;/code&gt; helper with the new option. No other codepaths are affected:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;date_select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:date_of_birth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;ss&quot;&gt;order: &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:month&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:day&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+  &lt;span class=&quot;ss&quot;&gt;render_discarded: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;over-communicate&quot;&gt;Over-Communicate&lt;/h3&gt;
+
+&lt;p&gt;The last piece of advice I have for you is perhaps the most important - communicating what your patch does and when it’s time to re-examine it. Your goal with monkeypatches should always be to eventually remove the patch altogether. To that end, a responsible monkeypatch includes comments that:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Describe what the patch does.&lt;/li&gt;
+  &lt;li&gt;Explain why the patch is necessary.&lt;/li&gt;
+  &lt;li&gt;Outline the assumptions the patch makes.&lt;/li&gt;
+  &lt;li&gt;Specify a date in the future when your team should reconsider alternative solutions, like pulling in an updated gem.&lt;/li&gt;
+  &lt;li&gt;Include links to relevant pull requests, blog posts, StackOverflow answers, etc.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;You might even print a warning or fail a test on a predetermined date to urge the team to reconfirm the patch’s assumptions and consider whether or not it’s still necessary.&lt;/p&gt;
+
+&lt;p&gt;Here’s the final version of our Rails &lt;code class=&quot;highlighter-rouge&quot;&gt;date_select&lt;/code&gt; patch, complete with comments and a date check:&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# ActionView&apos;s date_select helper provides the option to &quot;discard&quot; certain&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# fields. Discarded fields are (confusingly) still rendered to the page&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# using hidden inputs, i.e. &amp;lt;input type=&quot;hidden&quot; /&amp;gt;. This patch adds an&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# additional option to the date_select helper that allows the caller to&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# skip rendering the chosen fields altogether. For example, to render all&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# but the year field, you might have this in one of your views:&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# date_select(:date_of_birth, order: [:month, :day])&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# or, equivalently:&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# date_select(:date_of_birth, discard_year: true)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# To avoid rendering the year field altogether, set :render_discarded to&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# false:&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# date_select(:date_of_birth, discard_year: true, render_discarded: false)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# This patch assumes the #build_hidden method exists on&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# ActionView::Helpers::DateTimeSelector and accepts two arguments.&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;#&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;EXPIRATION_DATE&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;new&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2021&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;8&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;today&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;EXPIRATION_DATE&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;WARNING: Please re-evaluate whether or not the ActionView &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;\&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&quot;date_select patch present in &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;__FILE__&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; is still necessary.&quot;&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_const&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;find_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+      &lt;span class=&quot;c1&quot;&gt;# make sure the class we want to patch exists;&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# make sure the #build_hidden method exists and accepts exactly&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# two arguments&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mtd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;arity&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;raise&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Could not find class or method when patching &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;\&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&quot;ActionView&apos;s date_select helper. Please investigate.&quot;&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+      &lt;span class=&quot;c1&quot;&gt;# if rails has been upgraded, make sure this patch is still&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# necessary&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails_version_ok?&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;WARNING: It looks like Rails has been upgraded since &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;\&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&quot;ActionView&apos;s date_select helper was monkeypatched in &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;\&lt;/span&gt;
+          &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;__FILE__&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;. Please re-evaluate the patch.&quot;&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+      &lt;span class=&quot;c1&quot;&gt;# actually apply the patch&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prepend&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;InstanceMethods&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;kp&quot;&gt;private&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;find_const&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Kernel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;const_get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;&apos;ActionView::Helpers::DateTimeSelector&apos;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NameError&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# return nil if the constant doesn&apos;t exist&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;find_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;unless&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;const&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;instance_method&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:build_hidden&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;rescue&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;NameError&lt;/span&gt;
+      &lt;span class=&quot;c1&quot;&gt;# return nil if the method doesn&apos;t exist&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;rails_version_ok?&lt;/span&gt;
+      &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;MAJOR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;VERSION&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;MINOR&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+  &lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;InstanceMethods&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# :render_discarded is an additional option you can pass to the&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# date_select helper in your views. Use it to avoid rendering&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# &quot;discarded&quot; fields, i.e. fields marked as discarded or simply&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# not included in date_select&apos;s :order array. For example,&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# specifying order: [:day, :month] will cause the helper to&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# &quot;discard&quot; the :year field. Discarding a field renders it as a&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# hidden input. Set :render_discarded to false to avoid rendering&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;# it altogether.&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;build_hidden&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:render_discarded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+        &lt;span class=&quot;s1&quot;&gt;&apos;&apos;&lt;/span&gt;
+      &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;RenderDiscardedMonkeypatch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;apply_patch&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;I totally get that some of the suggestions I’ve outlined above might seem like overkill. Our Rails patch contains way more defensive verification code than actual patch code!&lt;/p&gt;
+
+&lt;p&gt;Think of all that extra code as a sheath for your broadsword. It’s a lot easier to avoid getting cut if it’s enveloped in a layer of protection.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://media.giphy.com/media/KFPRdKqy96oaI4HWEn/giphy-downsized.gif&quot; alt=&quot;Sword guitar&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;What really matters, though, is that I feel confident deploying responsible monkeypatches into production. Irresponsible ones are just time bombs waiting to cost you or your company time, money, and developer health.&lt;/p&gt;</content><author><name>Cameron Dutro</name></author><summary type="html">This is a post I wrote for the AppSignal blog about how to monkeypatch without making a mess :)</summary></entry><entry><title type="html">Installing 220 Gems in 40 Seconds</title><link href="/2021/08/14/installing-220-gems-in-40-seconds/" rel="alternate" type="text/html" title="Installing 220 Gems in 40 Seconds" /><published>2021-08-14T21:30:00-07:00</published><updated>2021-08-14T21:30:00-07:00</updated><id>/2021/08/14/installing-220-gems-in-40-seconds</id><content type="html" xml:base="/2021/08/14/installing-220-gems-in-40-seconds/">&lt;p&gt;I gave a &lt;a href=&quot;https://youtu.be/YMoa5JpjEtM?t=1315&quot;&gt;lightning talk&lt;/a&gt; at RubyConf in 2017 about a gem I was working on at the time called &lt;a href=&quot;https://github.com/camertron/prebundler&quot;&gt;prebundler&lt;/a&gt;.  I recently spent a bunch of time improving it, so I thought I’d write up a post.&lt;/p&gt;
+
+&lt;hr /&gt;
 
 &lt;p&gt;Back in 2017 I worked for Lumos Labs, the creators of Lumosity. We had recently transitioned from a custom Capistrano setup to Docker and Kubernetes for deploying our large Rails monolith. While we were pretty darn happy with it, the slowness of our Docker builds eventually became a major pain point. It would sometimes take over 30 minutes for CI to run, and while we used CI to run tests and a few other things as well, by far the most time-consuming part was building the Docker image. I decided to investigate.&lt;/p&gt;
 
@@ -261,9 +949,9 @@ docker build &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
 
 &lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
 
-&lt;p&gt;If installing gem dependencies is slowing down your CI builds and blocking releases, consider giving prebundler a try. If you run into trouble, please don’t hesitate to file an issue or, better yet, submit a pull request :)&lt;/p&gt;</content><author><name></name></author><summary type="html">I gave a lightning talk at RubyConf in 2017 about a gem I was working on at the time called prebundler. I recently spent a bunch of time improving it, so I thought I’d write up a post.</summary></entry><entry><title type="html">Why Ruby’s Enumerable Module is Awesome</title><link href="/2021/07/10/why-rubys-enumerable-module-is-awesome/" rel="alternate" type="text/html" title="Why Ruby&apos;s Enumerable Module is Awesome" /><published>2021-07-10T10:00:00-07:00</published><updated>2021-07-10T10:00:00-07:00</updated><id>/2021/07/10/why-rubys-enumerable-module-is-awesome</id><content type="html" xml:base="/2021/07/10/why-rubys-enumerable-module-is-awesome/">&lt;p&gt;This post was originally written in 2014 at the beginning of my tenure at Lumos Labs. At the time, I was a member of the Learning Team, an “extracurricular” group that met bi-weekly to discuss cool things we were learning about technology. We organized tech meetups in our office space, streamed live Google IO talks over the projector during lunch, and sent out a digest email to our colleagues every two weeks with links to various learning resources. I ended up writing a few longer-form articles for these email blasts. What follows is an embellished version of one of those articles.&lt;/p&gt;
+&lt;p&gt;If installing gem dependencies is slowing down your CI builds and blocking releases, consider giving prebundler a try. If you run into trouble, please don’t hesitate to file an issue or, better yet, submit a pull request :)&lt;/p&gt;</content><author><name>Cameron Dutro</name></author><summary type="html">I gave a lightning talk at RubyConf in 2017 about a gem I was working on at the time called prebundler. I recently spent a bunch of time improving it, so I thought I’d write up a post.</summary></entry><entry><title type="html">Why Ruby’s Enumerable Module is Awesome</title><link href="/2021/07/10/why-rubys-enumerable-module-is-awesome/" rel="alternate" type="text/html" title="Why Ruby&apos;s Enumerable Module is Awesome" /><published>2021-07-10T10:00:00-07:00</published><updated>2021-07-10T10:00:00-07:00</updated><id>/2021/07/10/why-rubys-enumerable-module-is-awesome</id><content type="html" xml:base="/2021/07/10/why-rubys-enumerable-module-is-awesome/">&lt;p&gt;This post was originally written in 2014 at the beginning of my tenure at Lumos Labs. At the time, I was a member of the Learning Team, an “extracurricular” group that met bi-weekly to discuss cool things we were learning about technology. We organized tech meetups in our office space, streamed live Google IO talks over the projector during lunch, and sent out a digest email to our colleagues every two weeks with links to various learning resources. I ended up writing a few longer-form articles for these email blasts. What follows is an embellished version of one of those articles.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Published on June 11th, 2021&lt;/strong&gt;&lt;/p&gt;
+&lt;hr /&gt;
 
 &lt;p&gt;You’re probably familiar with the concept of “iteration” in computer programming. It’s the idea of examining - or iterating over - each of the things in a collection.&lt;/p&gt;
 
@@ -583,9 +1271,9 @@ end
 
 &lt;p&gt;Enumerators and the &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; module are my all-time favorite Ruby features. They are what got me hooked on Ruby when I first started using it back in 2011. No other language I’ve used has been able to match the same level of expressiveness and flexibility.&lt;/p&gt;
 
-&lt;p&gt;I hope this post inspires you to use &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; in new and interesting ways!&lt;/p&gt;</content><author><name></name></author><summary type="html">This post was originally written in 2014 at the beginning of my tenure at Lumos Labs. At the time, I was a member of the Learning Team, an “extracurricular” group that met bi-weekly to discuss cool things we were learning about technology. We organized tech meetups in our office space, streamed live Google IO talks over the projector during lunch, and sent out a digest email to our colleagues every two weeks with links to various learning resources. I ended up writing a few longer-form articles for these email blasts. What follows is an embellished version of one of those articles.</summary></entry><entry><title type="html">Encapsulation is a Lie</title><link href="/2021/05/28/encapsulation-is-a-lie/" rel="alternate" type="text/html" title="Encapsulation is a Lie" /><published>2021-05-28T12:03:30-07:00</published><updated>2021-05-28T12:03:30-07:00</updated><id>/2021/05/28/encapsulation-is-a-lie</id><content type="html" xml:base="/2021/05/28/encapsulation-is-a-lie/">&lt;p&gt;In this post I respond to another of Jason Swett’s recent articles, &lt;a href=&quot;https://www.codewithjason.com/dont-wrap-instance-variables-attr_reader-unless-necessary/&quot;&gt;Don’t wrap instance variables in attr_reader unless necessary&lt;/a&gt;. Jason, if you’re reading this please know this blog isn’t only about critiquing your writing, which I find insightful and thought-provoking. You’ve really gotten me thinking lately, and I’ve been meaning to start a blog for a long time anyway. Seemed like a good opportunity to finally get one going.&lt;/p&gt;
+&lt;p&gt;I hope this post inspires you to use &lt;code class=&quot;highlighter-rouge&quot;&gt;Enumerable&lt;/code&gt; in new and interesting ways!&lt;/p&gt;</content><author><name>Cameron Dutro</name></author><summary type="html">This post was originally written in 2014 at the beginning of my tenure at Lumos Labs. At the time, I was a member of the Learning Team, an “extracurricular” group that met bi-weekly to discuss cool things we were learning about technology. We organized tech meetups in our office space, streamed live Google IO talks over the projector during lunch, and sent out a digest email to our colleagues every two weeks with links to various learning resources. I ended up writing a few longer-form articles for these email blasts. What follows is an embellished version of one of those articles.</summary></entry><entry><title type="html">Encapsulation is a Lie</title><link href="/2021/05/28/encapsulation-is-a-lie/" rel="alternate" type="text/html" title="Encapsulation is a Lie" /><published>2021-05-28T12:03:30-07:00</published><updated>2021-05-28T12:03:30-07:00</updated><id>/2021/05/28/encapsulation-is-a-lie</id><content type="html" xml:base="/2021/05/28/encapsulation-is-a-lie/">&lt;p&gt;In this post I respond to another of Jason Swett’s recent articles, &lt;a href=&quot;https://www.codewithjason.com/dont-wrap-instance-variables-attr_reader-unless-necessary/&quot;&gt;Don’t wrap instance variables in attr_reader unless necessary&lt;/a&gt;. Jason, if you’re reading this please know this blog isn’t only about critiquing your writing, which I find insightful and thought-provoking. You’ve really gotten me thinking lately, and I’ve been meaning to start a blog for a long time anyway. Seemed like a good opportunity to finally get one going.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Published on May 28th, 2021&lt;/strong&gt;&lt;/p&gt;
+&lt;hr /&gt;
 
 &lt;h3 id=&quot;what-is-attr_reader&quot;&gt;What is &lt;code class=&quot;highlighter-rouge&quot;&gt;attr_reader&lt;/code&gt;?&lt;/h3&gt;
 
@@ -791,13 +1479,13 @@ end
 
 &lt;p&gt;My takeaway message is this: encapsulation doesn’t provide the guarantees we were taught it does. There’s no real benefit to “hiding” data inside an object, since that data may be referenced - privately or publicly - by any number of other objects. You might as well expose your instance variables with &lt;code class=&quot;highlighter-rouge&quot;&gt;attr_reader&lt;/code&gt; for the inheritance benefits.&lt;/p&gt;
 
-&lt;p&gt;Disagree? &lt;a href=&quot;https://twitter.com/camertron&quot;&gt;Hit me up&lt;/a&gt; on Twitter.&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><summary type="html">In this post I respond to another of Jason Swett’s recent articles, Don’t wrap instance variables in attr_reader unless necessary. Jason, if you’re reading this please know this blog isn’t only about critiquing your writing, which I find insightful and thought-provoking. You’ve really gotten me thinking lately, and I’ve been meaning to start a blog for a long time anyway. Seemed like a good opportunity to finally get one going.</summary></entry><entry><title type="html">The Case for Service Objects</title><link href="/2021/05/21/the-case-for-service-objects/" rel="alternate" type="text/html" title="The Case for Service Objects" /><published>2021-05-21T10:17:29-07:00</published><updated>2021-05-21T10:17:29-07:00</updated><id>/2021/05/21/the-case-for-service-objects</id><content type="html" xml:base="/2021/05/21/the-case-for-service-objects/">&lt;p&gt;This article is a response to Jason Swett’s &lt;a href=&quot;https://www.codewithjason.com/rails-service-objects/&quot;&gt;“Beware of ‘service objects’ in Rails”&lt;/a&gt; blog post. In it, Jason warns of the dangers of letting service objects rob you of the benefits of object-oriented programming. I’ve read Jason’s post several times, and listened to a number of discussions he’s had about service objects on his podcast, &lt;a href=&quot;https://www.codewithjason.com/rails-with-jason-podcast/&quot;&gt;Rails with Jason&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Disagree? &lt;a href=&quot;https://twitter.com/camertron&quot;&gt;Hit me up&lt;/a&gt; on Twitter.&lt;/p&gt;</content><author><name>Cameron Dutro</name></author><category term="ruby" /><summary type="html">In this post I respond to another of Jason Swett’s recent articles, Don’t wrap instance variables in attr_reader unless necessary. Jason, if you’re reading this please know this blog isn’t only about critiquing your writing, which I find insightful and thought-provoking. You’ve really gotten me thinking lately, and I’ve been meaning to start a blog for a long time anyway. Seemed like a good opportunity to finally get one going.</summary></entry><entry><title type="html">The Case for Service Objects</title><link href="/2021/05/21/the-case-for-service-objects/" rel="alternate" type="text/html" title="The Case for Service Objects" /><published>2021-05-21T10:17:29-07:00</published><updated>2021-05-21T10:17:29-07:00</updated><id>/2021/05/21/the-case-for-service-objects</id><content type="html" xml:base="/2021/05/21/the-case-for-service-objects/">&lt;p&gt;This article is a response to Jason Swett’s &lt;a href=&quot;https://www.codewithjason.com/rails-service-objects/&quot;&gt;“Beware of ‘service objects’ in Rails”&lt;/a&gt; blog post. In it, Jason warns of the dangers of letting service objects rob you of the benefits of object-oriented programming. I’ve read Jason’s post several times, and listened to a number of discussions he’s had about service objects on his podcast, &lt;a href=&quot;https://www.codewithjason.com/rails-with-jason-podcast/&quot;&gt;Rails with Jason&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;By the way, both Jason’s blog and podcast are excellent. Go check them out right now 😊&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;Just last week, Jason was invited onto the Remote Ruby podcast where he and the panelists &lt;a href=&quot;https://remoteruby.transistor.fm/129&quot;&gt;discussed service objects again&lt;/a&gt;. Something about the converstaion struck a cord with me. I’ve listened to Jason talk about his distaste for service objects for a long time. I think he’s right, but also wrong. What follows are my thoughts on the humble, oft misunderstood, service object.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Published on May 21st, 2021&lt;/strong&gt;&lt;/p&gt;
+&lt;hr /&gt;
 
 &lt;h3 id=&quot;intro&quot;&gt;Intro&lt;/h3&gt;
 
@@ -1173,4 +1861,4 @@ end
 
 &lt;p&gt;I hope this article has explained why service objects deserve a place in your Rails app. Just remember to keep ‘em out of your model code.&lt;/p&gt;
 
-&lt;p&gt;Disagree? &lt;a href=&quot;https://twitter.com/camertron&quot;&gt;Hit me up&lt;/a&gt; on Twitter.&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="service objects" /><category term="web development" /><category term="rails" /><summary type="html">This article is a response to Jason Swett’s “Beware of ‘service objects’ in Rails” blog post. In it, Jason warns of the dangers of letting service objects rob you of the benefits of object-oriented programming. I’ve read Jason’s post several times, and listened to a number of discussions he’s had about service objects on his podcast, Rails with Jason.</summary></entry></feed>
+&lt;p&gt;Disagree? &lt;a href=&quot;https://twitter.com/camertron&quot;&gt;Hit me up&lt;/a&gt; on Twitter.&lt;/p&gt;</content><author><name>Cameron Dutro</name></author><category term="ruby" /><category term="service objects" /><category term="web development" /><category term="rails" /><summary type="html">This article is a response to Jason Swett’s “Beware of ‘service objects’ in Rails” blog post. In it, Jason warns of the dangers of letting service objects rob you of the benefits of object-oriented programming. I’ve read Jason’s post several times, and listened to a number of discussions he’s had about service objects on his podcast, Rails with Jason.</summary></entry></feed>

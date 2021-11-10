@@ -73,11 +73,16 @@
 
   <section class="section">
     <div class="container">
+        <div class="mb-6 author has-text-centered p-author">
+          <img src="https://avatars.githubusercontent.com/u/575280" alt="Cameron Dutro" class="avatar u-photo" />
+          by <a href="/authors/cameron/" class="has-text-weight-bold u-url p-name">Cameron Dutro</a>
+          on August 14, 2021
+        </div>
 
       <div class="content e-content">
         <p>I gave a <a href="https://youtu.be/YMoa5JpjEtM?t=1315">lightning talk</a> at RubyConf in 2017 about a gem I was working on at the time called <a href="https://github.com/camertron/prebundler">prebundler</a>.  I recently spent a bunch of time improving it, so I thought I’d write up a post.</p>
 
-<p><strong>Published on August 14th, 2021</strong></p>
+<hr />
 
 <p>Back in 2017 I worked for Lumos Labs, the creators of Lumosity. We had recently transitioned from a custom Capistrano setup to Docker and Kubernetes for deploying our large Rails monolith. While we were pretty darn happy with it, the slowness of our Docker builds eventually became a major pain point. It would sometimes take over 30 minutes for CI to run, and while we used CI to run tests and a few other things as well, by far the most time-consuming part was building the Docker image. I decided to investigate.</p>
 
