@@ -2,12 +2,13 @@
 layout: post
 title: "Installing 220 Gems in 40 Seconds"
 date: 2021-08-14 21:30:00 -0700
+author: cameron
 published: true
 ---
 
 I gave a [lightning talk](https://youtu.be/YMoa5JpjEtM?t=1315) at RubyConf in 2017 about a gem I was working on at the time called [prebundler](https://github.com/camertron/prebundler).  I recently spent a bunch of time improving it, so I thought I’d write up a post.
 
-**Published on August 14th, 2021**
+<hr>
 
 Back in 2017 I worked for Lumos Labs, the creators of Lumosity. We had recently transitioned from a custom Capistrano setup to Docker and Kubernetes for deploying our large Rails monolith. While we were pretty darn happy with it, the slowness of our Docker builds eventually became a major pain point. It would sometimes take over 30 minutes for CI to run, and while we used CI to run tests and a few other things as well, by far the most time-consuming part was building the Docker image. I decided to investigate.
 

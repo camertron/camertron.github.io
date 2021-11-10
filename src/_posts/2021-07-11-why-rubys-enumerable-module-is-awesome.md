@@ -2,12 +2,13 @@
 layout: post
 title: "Why Ruby's Enumerable Module is Awesome"
 date: 2021-07-10 10:00:00 -0700
+author: cameron
 published: true
 ---
 
 This post was originally written in 2014 at the beginning of my tenure at Lumos Labs. At the time, I was a member of the Learning Team, an "extracurricular" group that met bi-weekly to discuss cool things we were learning about technology. We organized tech meetups in our office space, streamed live Google IO talks over the projector during lunch, and sent out a digest email to our colleagues every two weeks with links to various learning resources. I ended up writing a few longer-form articles for these email blasts. What follows is an embellished version of one of those articles.
 
-**Published on June 11th, 2021**
+<hr>
 
 You're probably familiar with the concept of "iteration" in computer programming. It's the idea of examining - or iterating over - each of the things in a collection.
 

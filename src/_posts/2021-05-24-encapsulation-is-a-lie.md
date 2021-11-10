@@ -3,13 +3,14 @@ layout: post
 title: "Encapsulation is a Lie"
 date: 2021-05-28 12:03:30 -0700
 published: true
+author: cameron
 tags:
   - ruby
 ---
 
 In this post I respond to another of Jason Swett's recent articles, [Don’t wrap instance variables in attr_reader unless necessary](https://www.codewithjason.com/dont-wrap-instance-variables-attr_reader-unless-necessary/). Jason, if you're reading this please know this blog isn't only about critiquing your writing, which I find insightful and thought-provoking. You've really gotten me thinking lately, and I've been meaning to start a blog for a long time anyway. Seemed like a good opportunity to finally get one going.
 
-**Published on May 28th, 2021**
+<hr>
 
 ### What is `attr_reader`?
 

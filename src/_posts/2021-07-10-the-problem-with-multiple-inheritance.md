@@ -1,5 +1,6 @@
 ---
 title: The Problem with Multiple Inheritance
+author: cameron
 published: false
 ---
 

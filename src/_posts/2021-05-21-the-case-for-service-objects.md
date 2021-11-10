@@ -2,6 +2,7 @@
 layout: post
 title: "The Case for Service Objects"
 date: 2021-05-21 10:17:29 -0700
+author: cameron
 tags:
   - ruby
   - service objects
@@ -15,7 +16,7 @@ This article is a response to Jason Swett's ["Beware of 'service objects' in Rai
 
 Just last week, Jason was invited onto the Remote Ruby podcast where he and the panelists [discussed service objects again](https://remoteruby.transistor.fm/129). Something about the converstaion struck a cord with me. I've listened to Jason talk about his distaste for service objects for a long time. I think he's right, but also wrong. What follows are my thoughts on the humble, oft misunderstood, service object.
 
-**Published on May 21st, 2021**
+<hr>
 
 ### Intro
 

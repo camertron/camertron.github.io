@@ -2,12 +2,13 @@
 layout: post
 title: "Some Thoughts on Technical Debt"
 date: 2021-11-09 20:53:00 -0800
+author: cameron
 published: true
 ---
 
 My thoughts on a ["recent episode of the Compiler podcast"](https://www.redhat.com/en/compiler-podcast/what-is-technical-debt) entitled "Do We Want a World Without Technical Debt?"
 
-**Published on November 9th, 2021**
+<hr>
 
 I’m a big fan of pretty much everything Saron Yitbarek does, and recently one of those things has been the excellent [Command Line Heroes](https://www.redhat.com/en/command-line-heroes) podcast. The most recent show was actually promoting another podcast called Compiler, specifically their fourth episode entitled [“Do We Want a World Without Technical Debt?”](https://www.redhat.com/en/compiler-podcast/what-is-technical-debt).
 
