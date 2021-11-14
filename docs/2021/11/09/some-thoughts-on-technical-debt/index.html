@@ -91,7 +91,7 @@
 <h2 id="what-is-technical-debt">What is Technical Debt?</h2>
 <p>In my experience, technical debt is the cost of choosing a faster, easier, or partially complete solution over a more thoughtful, time-consuming, or correct one. Most of the time these decisions are made because of time constraints. “We need this feature yesterday!”</p>
 
-<p>Anyone who’s worked for a few years in the software industry has likely encountered these opposing forces of time and correctness. Given infinite time, theoretically a software development team could produce a completely correct and consistent system. The problem of course is that infinite time - or even sufficient time - is often not available. In these situations, software development teams frequently choose to incur technical debt, producing a system that works /well enough/ for the given set of requirements. The idea is that, at some future time, they’ll revisit the problem and implement a more robust solution.</p>
+<p>Anyone who’s worked for a few years in the software industry has likely encountered these opposing forces of time and correctness. Given infinite time, theoretically a software development team could produce a completely correct and consistent system. The problem of course is that infinite time - or even sufficient time - is often not available. In these situations, software development teams frequently choose to incur technical debt, producing a system that works <em>well enough</em> for the given set of requirements. The idea is that, at some future time, they’ll revisit the problem and implement a more robust solution.</p>
 
 <p>Sounds like a fair tradeoff, right?</p>
 
@@ -109,12 +109,10 @@
 
 <p>Financial institutions, governments, and businesses use debt all the time. The US government for example issues bonds, which are sort of “reverse” loans where individual people loan money to the government. Venture capital firms loan money to start-ups they hope will take off and make them large returns. You can even see debt at work between whole countries.</p>
 
-<p>-The thing is, debt isn’t just an amount of money you owe to another person or institution - it also establishes your credibility. Banks, companies, etc are more likely to lend to you if you’ve already shown you’re a trustworthy borrower. Missing or late payments, default, etc can damage your reputation.-</p>
-
 <h2 id="tech-debt-through-the-financial-lens">Tech Debt Through the Financial Lens</h2>
 <p>For whatever reason, I haven’t heard very many programmers talk about why  “technical debt” contains the word “debt.” It’s a curious choice of words, but really very appropriate.</p>
 
-<p>Imagine for a minute that every decision you make as a programmer is a financial transaction. Our currency is time. Decisions that don’t require trading large amounts of time for correctness are simple, direct transactions. Decisions in which you sacrifice correctness in the interest of time are /loans/. The loan represents time borrowed from the bank - time you promise to repay later. At the risk of stretching the metaphor a little too far, we might even say the bank collects interest since it always takes more time to dive back into code you wrote a while ago.</p>
+<p>Imagine for a minute that every decision you make as a programmer is a financial transaction. Our currency is time. Decisions that don’t require trading large amounts of time for correctness are simple, direct transactions. Decisions in which you sacrifice correctness in the interest of time are <em>loans</em>. The loan represents time borrowed from the bank - time you promise to repay later. At the risk of stretching the metaphor a little too far, we might even say the bank collects interest since it always takes more time to dive back into code you wrote a while ago.</p>
 
 <p>Again, everybody wins. With their borrowed time the team can deliver systems and features faster. The bank will eventually get its time back plus interest.</p>
 
@@ -125,11 +123,11 @@
 <h2 id="tech-debt-is-unavoidable">Tech Debt is Unavoidable</h2>
 <p>Unfortunately, no.</p>
 
-<p>The most successful teams I’ve seen that manage their tech debt effectively do so by including it in their planning. They track it in their software management system and discuss how much time should be allocated to reducing it every sprint. Sometimes, an entire sprint is dedicated to refactoring a certain part of the code to make it easier to implement a new feature the /following/ sprint.</p>
+<p>The most successful teams I’ve seen that manage their tech debt effectively do so by including it in their planning. They track it in their software management system and discuss how much time should be allocated to reducing it every sprint. Sometimes, an entire sprint is dedicated to refactoring a certain part of the code to make it easier to implement a new feature the <em>following</em> sprint.</p>
 
 <p>However, tech debt accumulates even in systems nobody’s working on.</p>
 
-<p>If you’ve ever tried to dust off and boot up an old app, you’ve likely run into the phenomenon of /bitrot/. Code (almost literally) /rots/ as it ages. Bitrot happens because our apps are made up of so much more than just our own code. They depend on a bunch of other software packages, build tooling, CI pipelines, 3rd-party APIs, and external systems. A software package that built successfully on your laptop with Clang 3.5 in 2014 now dumps out a whole mess of compiler warnings and an esoteric error message. The version of the 3rd party API your app relies on was deprecated in 2015 and removed in 2016. The latest version of MySQL no longer supports a specific type of column your app relies on. The list goes on and on.</p>
+<p>If you’ve ever tried to dust off and boot up an old app, you’ve likely run into the phenomenon of <em>bitrot</em>. Code (almost literally) <em>rots</em> as it ages. Bitrot happens because our apps are made up of so much more than just our own code. They depend on a bunch of other software packages, build tooling, CI pipelines, 3rd-party APIs, and external systems. A software package that built successfully on your laptop with Clang 3.5 in 2014 now dumps out a whole mess of compiler warnings and an esoteric error message. The version of the 3rd party API your app relies on was deprecated in 2015 and removed in 2016. The latest version of MySQL no longer supports a specific type of column your app relies on. The list goes on and on.</p>
 
 <p>While it’s true that, in actively maintained systems bitrot is less likely, such systems are still susceptible to forces outside of your control. The canonical example is probably upgrading to the next version of your app’s web framework. You want all the new features, bug fixes, and security patches in the new version, but the upgrade isn’t going to happen without a serious investment of time and effort. In my experience these upgrades can sometimes take years to pull off.</p>
 
